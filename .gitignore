@@ -1,0 +1,43 @@
+# Python
+*.pyc
+*.pyo
+*.pyd
+__pycache__/
+env/
+venv/
+*.env
+
+# Flask
+instance/
+*.db
+*.sqlite3
+
+# PostgreSQL
+pgdata/
+*.sql
+*.dump
+
+# React
+node_modules/
+build/
+
+# IDEs and Editors
+.vscode/
+*.sublime-workspace
+*.sublime-project
+*.idea/
+
+# OS-specific files
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Environment Files
+.env
+*.env
+
+# Temporary Files
+tmp/
+temp/
