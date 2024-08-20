@@ -68,3 +68,7 @@ class GuestRepository():
         self._connection.execute(query, params)
         return None
     
+    def delete(self, guest_id):
+        query = "DELETE FROM guests WHERE id = %s"
+        self._connection.execute(query, [guest_id])
+        return None

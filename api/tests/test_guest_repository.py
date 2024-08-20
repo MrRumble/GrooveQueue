@@ -225,3 +225,31 @@ def test_update(db_connection):
     
     # Check that the IDs match
     assert updated_guest.id == guest_to_update.id
+
+def test_delete(db_connection):
+    # Seed the database with test data
+    db_connection.seed("../seeds/guests_table_test_data.sql")
+    
+    # Create an instance of GuestRepository
+    guest_repo = GuestRepository(db_connection)
+    
+    # Ensure guest with id 1 exists before deletion
+    guest_before_deletion = guest_repo.find(1)
+    assert guest_before_deletion is not None
+    
+    # Delete the guest with id 1
+    guest_repo.delete(1)
+    
+    # Try to find the deleted guest
+    try:
+        guest_repo.find(1)
+        guest_found = True
+    except IndexError:
+        guest_found = False
+    
+    # Assert that the guest was deleted
+    assert guest_found is False
+
+    # Optionally, check that the number of guests has decreased by one
+    all_guests = guest_repo.find_all()
+    assert len(all_guests) == 9  # Assuming there were initially 10 guests
