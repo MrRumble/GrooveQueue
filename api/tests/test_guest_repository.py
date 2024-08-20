@@ -1,3 +1,4 @@
+from api.common import db
 from api.guests.guest_model import Guest
 from api.guests.guest_repository import GuestRepository
 
@@ -253,3 +254,14 @@ def test_delete(db_connection):
     # Optionally, check that the number of guests has decreased by one
     all_guests = guest_repo.find_all()
     assert len(all_guests) == 9  # Assuming there were initially 10 guests
+
+def test_guest_email_exists(db_connection):
+    guest_repo = GuestRepository(db_connection)
+    result = guest_repo.email_exists("jane.smith@example.com")   # In test DB
+    assert result is True
+
+    false_result = guest_repo.email_exists("unique-email@example.com")   # Not test DB
+    assert false_result is False
+
+
+

@@ -72,3 +72,8 @@ class GuestRepository():
         query = "DELETE FROM guests WHERE id = %s"
         self._connection.execute(query, [guest_id])
         return None
+    
+    def email_exists(self, email: str) -> bool:
+        query = "SELECT 1 FROM guests WHERE email = %s LIMIT 1"
+        rows = self._connection.execute(query, [email])
+        return len(rows) > 0
