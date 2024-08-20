@@ -1,6 +1,6 @@
 from api.guests.guest_model import Guest
 from api.guests.guest_repository import GuestRepository
-import datetime
+
 
 def test_find_user_by_id(db_connection):
     # Seed the database with test data
@@ -193,3 +193,35 @@ def test_create(db_connection):
     assert found_guest.oauth_provider == 'twitter'
     assert found_guest.oauth_provider_id == "tw202"
     
+def test_update(db_connection):
+    # Seed the database with test data
+    db_connection.seed("../seeds/guests_table_test_data.sql")
+    
+    # Create an instance of GuestRepository
+    guest_repo = GuestRepository(db_connection)
+    
+    # Find an existing guest to update
+    guest_to_update = guest_repo.find(1)
+    
+    # Modify the guest's details
+    guest_to_update.name = "Updated Name"
+    guest_to_update.email = "updated.email@example.com"
+    guest_to_update.password = "updatedpassword"
+    guest_to_update.oauth_provider = "github"
+    guest_to_update.oauth_provider_id = "gh12345"
+    
+    # Perform the update operation
+    guest_repo.update(guest_to_update.id, guest_to_update)
+    
+    # Fetch the updated guest from the database
+    updated_guest = guest_repo.find(guest_to_update.id)
+    
+    # Assert the updated fields
+    assert updated_guest.name == "Updated Name"
+    assert updated_guest.email == "updated.email@example.com"
+    assert updated_guest.password == "updatedpassword"
+    assert updated_guest.oauth_provider == "github"
+    assert updated_guest.oauth_provider_id == "gh12345"
+    
+    # Check that the IDs match
+    assert updated_guest.id == guest_to_update.id

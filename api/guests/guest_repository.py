@@ -1,4 +1,5 @@
 from api.guests.guest_model import Guest
+import datetime
 
 class GuestRepository():
     def __init__(self, connection):
@@ -39,6 +40,30 @@ class GuestRepository():
                 guest.oauth_provider_id,
                 guest.created_at or datetime.now(),
                 guest.updated_at or datetime.now()
+            )
+        self._connection.execute(query, params)
+        return None
+    
+    def update(self, guest_id, guest):
+        query = """
+            UPDATE guests
+            SET name = %s,
+                email = %s,
+                password = %s,
+                oauth_provider = %s,
+                oauth_provider_id = %s,
+                updated_at = %s
+            WHERE id = %s
+            RETURNING id, created_at, updated_at
+        """
+        params = (
+                guest.name,
+                guest.email,
+                guest.password,
+                guest.oauth_provider,
+                guest.oauth_provider_id,
+                guest.updated_at or datetime.datetime.now(),
+                guest_id
             )
         self._connection.execute(query, params)
         return None
