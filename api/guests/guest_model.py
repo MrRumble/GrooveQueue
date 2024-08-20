@@ -30,3 +30,15 @@ class Guest:
                 f"oauth_provider_id={self.oauth_provider_id}, "
                 f"created_at={self.created_at}, "
                 f"updated_at={self.updated_at})")
+    
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "name": self.name,
+            "email": self.email,
+            "password": self.password,
+            "oauth_provider": self.oauth_provider,
+            "oauth_provider_id": self.oauth_provider_id,
+            "created_at": self.created_at.isoformat(),  # Convert to ISO format
+            "updated_at": self.updated_at.isoformat()   # Convert to ISO format
+        }
