@@ -129,7 +129,9 @@ def test_create_guest_missing_field_returns_error(web_client):
 
     data = {
             'email' : "jimmy-test@example.com",
-            'password' : 'Password123!'
+            'password' : 'Password123!',
+            'oauth_provider': None,
+            'oauth_provider_id': None
             }
     
     response = web_client.post('/guests', json=data)
@@ -143,7 +145,9 @@ def test_create_guest_correct_fields_returns_result(web_client):
     data =  {
             'name' : 'Big Jim',
             'email' : "jimmy-test@example.com",
-            'password' : 'Password123!'
+            'password' : 'Password123!',
+            'oauth_provider': None,
+            'oauth_provider_id': None
             }
     
     response = web_client.post('/guests', json=data)
@@ -151,3 +155,19 @@ def test_create_guest_correct_fields_returns_result(web_client):
 
     response_json = response.get_json()
     assert response_json['message'] == "New Guest created and stored in db."
+
+def test_create_guest_oauth_field_wrong_data_type(web_client):
+
+    data =  {
+            'name' : 'Big Jim',
+            'email' : "jimmy-test@example.com",
+            'password' : 'Password123!',
+            'oauth_provider': 1,
+            'oauth_provider_id': None
+            }
+    
+    response = web_client.post('/guests', json=data)
+    assert response.status_code == 400
+
+    response_json = response.get_json()
+    assert response_json['error'] == "Invalid OAuth provider format"
