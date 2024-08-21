@@ -1,8 +1,7 @@
 from flask import Blueprint, request, jsonify, current_app
 from api.guests.guest_model import Guest
 from api.guests.guest_repository import GuestRepository
-from api.common.db import DatabaseConnection, get_flask_database_connection
-import datetime
+from api.common.db import get_flask_database_connection
 
 # Blueprint setup
 guest_bp = Blueprint('guest_bp', __name__)
