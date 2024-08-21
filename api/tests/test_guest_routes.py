@@ -1,4 +1,4 @@
-import datetime
+from flask import json
 
 def strip_timestamps(data):
     """Helper function to remove or normalize timestamp fields from data."""
@@ -124,3 +124,30 @@ def test_get_all_guests(db_connection, web_client):
 
     # Perform assertion
     assert stripped_actual == stripped_expected
+
+def test_create_guest_missing_field_returns_error(web_client):
+
+    data = {
+            'email' : "jimmy-test@example.com",
+            'password' : 'Password123!'
+            }
+    
+    response = web_client.post('/guests', json=data)
+    assert response.status_code == 400
+
+    response_json = response.get_json()
+    assert response_json['error'] == "Missing required fields"
+
+def test_create_guest_correct_fields_returns_result(web_client):
+
+    data =  {
+            'name' : 'Big Jim',
+            'email' : "jimmy-test@example.com",
+            'password' : 'Password123!'
+            }
+    
+    response = web_client.post('/guests', json=data)
+    assert response.status_code == 201
+
+    response_json = response.get_json()
+    assert response_json['message'] == "New Guest created and stored in db."

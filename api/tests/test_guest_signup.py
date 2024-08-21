@@ -75,3 +75,14 @@ def test_sign_up_guest_email_exists(app):
         with pytest.raises(ValueError, match='Email already in use'):
             sign_up_guest(invalid_guest)
 
+def test_sign_up_guest_name_empty_string(app):
+    with app.app_context():
+        invalid_guest = Guest(
+            name="   ",
+            email="john.doe@example.com",
+            password="SecureP@ssw0rd",
+            oauth_provider=None,
+            oauth_provider_id=None
+        )
+        with pytest.raises(ValueError, match='Name cannot be empty'):
+            sign_up_guest(invalid_guest)

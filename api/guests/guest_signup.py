@@ -14,11 +14,13 @@ def sign_up_guest(guest: Guest) -> str:
     if not validate_password(guest.password):
         raise ValueError("Password must be at least 8 characters long, include uppercase, lowercase, number, and special character")
     
+    if not guest.name or guest.name.strip() == "":
+        raise ValueError("Name cannot be empty")
+
     if guest_repo.email_exists(guest.email):
         raise ValueError("Email already in use")
 
     # If validations pass, create the guest
     guest_repo.create(guest)
     return "New Guest created and stored in db."
-
 
