@@ -6,6 +6,11 @@ __pycache__/
 env/
 venv/
 *.env
+weddingvenv
+
+# pytest cache
+.pytest_cache/
+
 
 # Flask
 instance/
