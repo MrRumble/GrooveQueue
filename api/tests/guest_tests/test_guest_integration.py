@@ -1,11 +1,4 @@
-import os
-import pytest
-from flask import Flask
-from api.guests import guest_repository
 from api.guests.guest_repository import GuestRepository
-from api.guests.guest_signup import sign_up_guest
-from api.guests.guest_model import Guest
-from api.common.db import get_flask_database_connection, DatabaseConnection
 
 def test_create_guest_correct_fields_stored_in_db(db_connection, web_client):
     guest_repo = GuestRepository(db_connection)

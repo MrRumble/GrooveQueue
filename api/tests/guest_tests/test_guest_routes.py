@@ -1,4 +1,3 @@
-from flask import json
 
 def strip_timestamps(data):
     """Helper function to remove or normalize timestamp fields from data."""
