@@ -3,7 +3,7 @@ import pytest
 from flask import Flask
 from api.guests.guest_signup import sign_up_guest
 from api.guests.guest_model import Guest
-from api.common.db import get_flask_database_connection, DatabaseConnection
+from api.common.db import get_flask_database_connection
 
 @pytest.fixture(scope='module')
 def app():
