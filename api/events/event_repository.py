@@ -79,7 +79,24 @@ class EventRepository():
         self._connection.execute(query, [event_id])
         return None
 
-    def band_has_events(self, band_id: int) -> bool:
-        query = "SELECT 1 FROM events WHERE band_id = %s LIMIT 1"
+    def find_events_by_band_id(self, band_id):
+        query = "SELECT * FROM events WHERE band_id = %s"
         rows = self._connection.execute(query, [band_id])
-        return len(rows) > 0
+        if not rows:
+            return None
+        events = []
+        for row in rows:
+            event = Event(
+                event_id=row['event_id'],
+                event_name=row['event_name'],
+                location=row['location'],
+                event_start=row['event_start'],
+                event_end=row['event_end'],
+                qr_code_content=row['qr_code_content'],
+                band_id=row['band_id'],
+                created_at=row['created_at'],
+                updated_at=row['updated_at']
+            )
+            events.append(event)
+        return events
+        

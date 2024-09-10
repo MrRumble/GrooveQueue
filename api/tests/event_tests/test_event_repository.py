@@ -221,5 +221,38 @@ def test_delete_event(db_connection):
     expected_event_count = 4  # Adjust this if the number of events was different before deletion
     assert len(all_events) == expected_event_count
 
+def test_find_events_by_band_id(db_connection):
+    db_connection.seed("../seeds/events_table_test_data.sql")
+    event_repo = EventRepository(db_connection)
 
+    expected_events = [
+        Event(
+            event_id=2,
+            event_name='Jazz Night',
+            location='Blue Note, New York',
+            event_start=datetime.datetime(2024, 10, 5, 20, 0),
+            event_end=datetime.datetime(2024, 10, 5, 23, 59),
+            qr_code_content='jazz_night_qr_code_002',
+            band_id=3,
+            created_at=None,
+            updated_at=None
+        ),
+        Event(
+            event_id=5,
+            event_name='Autumn Jazz Festival',
+            location='Royal Albert Hall, London',
+            event_start=datetime.datetime(2024, 11, 10, 17, 0),
+            event_end=datetime.datetime(2024, 11, 10, 22, 0),
+            qr_code_content='autumn_jazz_festival_qr_code_005',
+            band_id=3,
+            created_at=None,
+            updated_at=None
+        ),
+    ]
 
+    # Assert no results returns None
+
+    assert event_repo.find_events_by_band_id(7) == None
+
+    expected_result = event_repo.find_events_by_band_id(3)
+    assert expected_result == expected_events

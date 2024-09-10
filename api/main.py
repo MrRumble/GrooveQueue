@@ -3,6 +3,7 @@ from flask_cors import CORS
 from dotenv import load_dotenv
 from api.guests.guest_routes import guest_bp
 from api.bands.band_route import band_bp
+from api.events.events_route import event_bp
 import os
 
 # Load environment variables
@@ -14,6 +15,8 @@ app = Flask(__name__)
 # Register the blueprint
 app.register_blueprint(guest_bp)
 app.register_blueprint(band_bp)
+app.register_blueprint(event_bp)
+
 # Initialize CORS
 CORS(app)
 
