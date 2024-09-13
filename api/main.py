@@ -3,7 +3,8 @@ from flask_cors import CORS
 from dotenv import load_dotenv
 from api.guests.guest_routes import guest_bp
 from api.bands.band_route import band_bp
-from api.events.events_route import event_bp
+from api.events.events_routes import event_bp
+
 import os
 
 # Load environment variables
