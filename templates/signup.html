@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Sign Up</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+</head>
+<body>
+    <h1>Sign Up</h1>
+    <form action="{{ url_for('guest_bp.sign_up_guest_route') }}" method="post">
+        <label for="name">Name:</label>
+        <input type="text" id="name" name="name" required><br><br>
+
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" required><br><br>
+
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password" required><br><br>
+
+        <label for="oauth_provider">OAuth Provider (optional):</label>
+        <input type="text" id="oauth_provider" name="oauth_provider"><br><br>
+
+        <label for="oauth_provider_id">OAuth Provider ID (optional):</label>
+        <input type="text" id="oauth_provider_id" name="oauth_provider_id"><br><br>
+
+        <input type="submit" value="Sign Up">
+    </form>
+</body>
+</html>
