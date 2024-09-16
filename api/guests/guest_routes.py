@@ -1,4 +1,4 @@
-from flask import Blueprint, request, jsonify, current_app
+from flask import Blueprint, request, jsonify, current_app, render_template
 from api.guests.guest_model import Guest
 from api.guests.guest_repository import GuestRepository
 from api.guests.guest_signup import sign_up_guest
@@ -51,3 +51,7 @@ def create_guest():
         return jsonify(message=result), 201
     except ValueError as e:
         return jsonify(error=str(e)), 400
+
+@guest_bp.route('/signupguest', methods=['GET'])
+def sign_up_guest_route():
+    return render_template('signup_guest.html')

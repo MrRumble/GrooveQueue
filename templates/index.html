@@ -7,12 +7,12 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
 </head>
 <body>
-    <h1>Welcome to GrooveQueue !</h1>
+    <h1>Welcome to GrooveQueue!</h1>
     
     <nav>
         <ul>
-            <li><a href="{{ url_for('sign_up_band') }}">Sign Up as Band</a></li>
-            <li><a href="{{ url_for('sign_up_guest') }}">Sign Up as Guest</a></li>
+            <li><a href="{{ url_for('guest_bp.sign_up_guest_route') }}">Sign Up as Guest</a></li>
+            <li><a href="{{ url_for('band_bp.sign_up_band_route') }}">Sign Up as Band</a></li>
         </ul>
     </nav>
 </body>

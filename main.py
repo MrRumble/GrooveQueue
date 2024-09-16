@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, render_template
 from flask_cors import CORS
 from dotenv import load_dotenv
 from api.guests.guest_routes import guest_bp
@@ -22,6 +22,9 @@ app.register_blueprint(request_bp)
 
 # Initialize CORS
 CORS(app)
+@app.route('/')
+def index():
+    return render_template('index.html')
 
 if __name__ == '__main__':
     app.run(debug=True, port=int(os.environ.get('PORT', 5001)))
