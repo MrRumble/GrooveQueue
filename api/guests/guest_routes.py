@@ -1,4 +1,4 @@
-from flask import Blueprint, request, jsonify, current_app, render_template
+from flask import Blueprint, request, jsonify, current_app, render_template, redirect, url_for, flash
 from api.guests.guest_model import Guest
 from api.guests.guest_repository import GuestRepository
 from api.guests.guest_signup import sign_up_guest
@@ -20,9 +20,11 @@ def get_all_guests():
     return jsonify(guests_dict), 200 
 
 # Route to create a new guest
-@guest_bp.route('/signupguest', methods=['POST'])
+@guest_bp.route('/guests', methods=['POST'])
 def create_guest():
-    data = request.get_json()
+    data = request.form
+    
+    print(data)
 
     # Validate the input data
     if not data or not all(key in data for key in ['name', 'email', 'password']):
@@ -52,6 +54,7 @@ def create_guest():
     except ValueError as e:
         return jsonify(error=str(e)), 400
 
+# Route to render the signup page
 @guest_bp.route('/signupguest', methods=['GET'])
 def sign_up_guest_route():
     return render_template('signup_guest.html')

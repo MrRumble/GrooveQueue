@@ -8,7 +8,19 @@
 </head>
 <body>
     <h1>Sign Up as Guest</h1>
-    <form action="{{ url_for('guest_bp.create_guest') }}" method="post"> <!-- Updated action URL -->
+
+    <!-- Display Flash Messages -->
+    {% with messages = get_flashed_messages(with_categories=True) %}
+        {% if messages %}
+            <ul class="flash-messages">
+                {% for category, message in messages %}
+                    <li class="{{ category }}">{{ message }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    {% endwith %}
+
+    <form action="{{ url_for('guest_bp.create_guest') }}" method="post" novalidate>
         <label for="name">Name:</label>
         <input type="text" id="name" name="name" required><br><br>
 

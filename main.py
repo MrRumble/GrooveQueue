@@ -14,6 +14,8 @@ load_dotenv()
 # Initialize Flask app
 app = Flask(__name__)
 
+app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY')
+
 # Register the blueprint
 app.register_blueprint(guest_bp)
 app.register_blueprint(band_bp)
