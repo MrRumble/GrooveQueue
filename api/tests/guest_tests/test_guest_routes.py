@@ -133,7 +133,7 @@ def test_create_guest_missing_field_returns_error(web_client):
             'oauth_provider_id': None
             }
     
-    response = web_client.post('/guests', json=data)
+    response = web_client.post('/signupguest', json=data)
     assert response.status_code == 400
 
     response_json = response.get_json()
@@ -149,7 +149,7 @@ def test_create_guest_correct_fields_returns_result(web_client):
             'oauth_provider_id': None
             }
     
-    response = web_client.post('/guests', json=data)
+    response = web_client.post('/signupguest', json=data)
     assert response.status_code == 201
 
     response_json = response.get_json()
@@ -165,7 +165,7 @@ def test_create_guest_oauth_field_wrong_data_type(web_client):
             'oauth_provider_id': None
             }
     
-    response = web_client.post('/guests', json=data)
+    response = web_client.post('/signupguest', json=data)
     assert response.status_code == 400
 
     response_json = response.get_json()

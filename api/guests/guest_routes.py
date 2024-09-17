@@ -20,9 +20,9 @@ def get_all_guests():
     return jsonify(guests_dict), 200 
 
 # Route to create a new guest
-@guest_bp.route('/guests', methods=['POST'])
+@guest_bp.route('/signupguest', methods=['POST'])
 def create_guest():
-    data = request.json
+    data = request.get_json()
 
     # Validate the input data
     if not data or not all(key in data for key in ['name', 'email', 'password']):

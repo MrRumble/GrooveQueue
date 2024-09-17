@@ -8,7 +8,7 @@ def test_create_guest_correct_fields_stored_in_db(db_connection, web_client):
             'password' : 'Password123!'
             }
     
-    response = web_client.post('/guests', json=data)
+    response = web_client.post('/signupguest', json=data)
     assert response.status_code == 201
     response_json = response.get_json()
     assert response_json['message'] == "New Guest created and stored in db."
@@ -25,7 +25,7 @@ def test_create_guest_invalid_fields_not_in_db(db_connection, web_client):
             'password' : 'Password123'
             }
     
-    web_client.post('/guests', json=data)
+    web_client.post('/signupguest', json=data)
     
     guests = guest_repo.find_all()
     created_guest_emails = [guest.email for guest in guests]
