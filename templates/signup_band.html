@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up as Band</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+</head>
+<body>
+    <h1>Sign Up as Band</h1>
+    <form action="{{ url_for('band_bp.create_band') }}" method="post">
+        <label for="band_name">Band Name:</label>
+        <input type="text" id="band_name" name="band_name" required><br><br>
+
+        <label for="band_email">Band Email:</label>
+        <input type="email" id="band_email" name="band_email" required><br><br>
+
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password" required><br><br>
+
+        <label for="oauth_provider">OAuth Provider (optional):</label>
+        <input type="text" id="oauth_provider" name="oauth_provider"><br><br>
+
+        <label for="oauth_provider_id">OAuth Provider ID (optional):</label>
+        <input type="text" id="oauth_provider_id" name="oauth_provider_id"><br><br>
+
+        <input type="submit" value="Sign Up">
+    </form>
+</body>
+</html>

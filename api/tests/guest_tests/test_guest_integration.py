@@ -5,10 +5,12 @@ def test_create_guest_correct_fields_stored_in_db(db_connection, web_client):
     data =  {
             'name' : 'Big Jim',
             'email' : "jimmy-test@example.com",
-            'password' : 'Password123!'
+            'password' : 'Password123!',
+            'oauth_provider': None,
+            'oauth_provider_id': None
             }
     
-    response = web_client.post('/guests', json=data)
+    response = web_client.post('/guests', data=data)
     assert response.status_code == 201
     response_json = response.get_json()
     assert response_json['message'] == "New Guest created and stored in db."
@@ -25,8 +27,25 @@ def test_create_guest_invalid_fields_not_in_db(db_connection, web_client):
             'password' : 'Password123'
             }
     
-    web_client.post('/guests', json=data)
+    web_client.post('/signupguest', json=data)
     
     guests = guest_repo.find_all()
     created_guest_emails = [guest.email for guest in guests]
     assert data['email'] not in created_guest_emails
+
+def test_hashed_password_stored_in_db(db_connection, web_client):
+    guest_repo = GuestRepository(db_connection)
+    data =  {
+            'name' : 'Big Jim',
+            'email' : "jimmy-test3@example.com",
+            'password' : 'Password1234!'
+            }
+    
+    web_client.post('/signupguest', json=data)
+
+    guests = guest_repo.find_all()
+    created_guest = guests[-1]
+    assert created_guest.password != data['password']
+    
+    
+    

@@ -1,4 +1,4 @@
-from flask import Blueprint, request, jsonify, current_app
+from flask import Blueprint, request, jsonify, current_app, render_template
 from api.bands.band_model import Band
 from api.bands.band_repository import BandRepository
 from api.bands.band_signup import sign_up_band  # Function for signing up a band
@@ -51,3 +51,7 @@ def create_band():
         return jsonify(message=result), 201
     except ValueError as e:
         return jsonify(error=str(e)), 400
+
+@band_bp.route('/signupband', methods=['GET'])
+def sign_up_band_route():
+    return render_template('signup_band.html')

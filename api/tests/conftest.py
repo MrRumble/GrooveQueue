@@ -1,7 +1,7 @@
 import pytest, sys, random, py, pytest, os
 from xprocess import ProcessStarter
 from api.common.db import DatabaseConnection
-from api.main import app
+from main import app
 
 # This is a Pytest fixture.
 # It creates an object that we can use in our tests.
