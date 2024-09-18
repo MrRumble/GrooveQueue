@@ -1,3 +1,10 @@
+import pytest
+from flask import url_for
+from werkzeug.security import check_password_hash
+from api.guests.guest_model import Guest
+from api.guests.guest_repository import GuestRepository
+from api.common.db import get_flask_database_connection
+
 
 def strip_timestamps(data):
     """Helper function to remove or normalize timestamp fields from data."""
@@ -124,37 +131,87 @@ def test_get_all_guests(db_connection, web_client):
     # Perform assertion
     assert stripped_actual == stripped_expected
 
-def test_create_guest_missing_field_returns_error(web_client):
-
+def test_create_guest_correct_fields_stored_in_db(db_connection, web_client):
+    db_connection.seed("../seeds/guests_table_test_data.sql")
     data = {
-            'email' : "jimmy-test@example.com",
-            'password' : 'Password123!',
-            'oauth_provider': None,
-            'oauth_provider_id': None
-            }
-    
-    response = web_client.post('/guests', json=data)
-    assert response.status_code == 400
+        'name': 'Big Jim',
+        'email': 'jimmy-jimbob@example.com',
+        'password': 'Password123!',
+        'oauth_provider': '',
+        'oauth_provider_id': ''
+    }
 
-    response_json = response.get_json()
-    assert response_json['error'] == "Missing required fields"
-
-def test_create_guest_correct_fields_returns_result(web_client):
-
-    data = {
-            'name' : 'Big Jim',
-            'email' : "jimmy-test@example.com",
-            'password' : 'Password123!',
-            'oauth_provider': None,
-            'oauth_provider_id': None
-            }
-    
     response = web_client.post('/guests', data=data)
-    assert response.status_code == 201
+    assert response.status_code == 302
+    
+    guest_repo = GuestRepository(db_connection)
+    guests = guest_repo.find_all()
+    created_guest_emails = [guest.email for guest in guests]
+    assert data['email'] in created_guest_emails
 
-    response_json = response.get_json()
-    assert response_json['message'] == "New Guest created and stored in db."
+def test_create_guest_invalid_fields_not_in_db(db_connection, web_client):
+    db_connection.seed("../seeds/guests_table_test_data.sql")
+    guest_repo = GuestRepository(db_connection)
+    data_name_empty = {
+        'name': '',
+        'email': 'jimmy-jimbob@example.com',
+        'password': 'Password123!',
+        'oauth_provider': '',
+        'oauth_provider_id': ''
+    }
+    data_email_empty = {
+        'name': 'Big Jim',
+        'email': '',
+        'password': 'Password123!',
+        'oauth_provider': '',
+        'oauth_provider_id': ''
+    }
+    data_email_invalid = {
+        'name': 'Big Jim',
+        'email': 'jimmy-jimbob.example.com',
+        'password': 'Password123!',
+        'oauth_provider': '',
+        'oauth_provider_id': ''
+    }
+    data_password_invalid = {
+        'name': 'Big Jim',
+        'email': 'jimmy-jimbob@example.com',
+        'password': 'Password123',
+        'oauth_provider': '',
+        'oauth_provider_id': ''
+    }
 
+    web_client.post('/guests', data=data_name_empty)
+    guests = guest_repo.find_all()
+    created_guest_emails = [guest.email for guest in guests]
+    print(created_guest_emails)
+    assert data_name_empty['email'] not in created_guest_emails
+    web_client.post('/guests', data=data_email_empty)
+    guests = guest_repo.find_all()
+    created_guest_emails = [guest.email for guest in guests]
+    assert data_email_empty['email'] not in created_guest_emails
+    web_client.post('/guests', data=data_email_invalid)
+    guests = guest_repo.find_all()
+    created_guest_emails = [guest.email for guest in guests]
+    assert data_email_invalid['email'] not in created_guest_emails
+    web_client.post('/guests', data=data_password_invalid)
+    guests = guest_repo.find_all()
+    created_guest_emails = [guest.email for guest in guests]
+    assert data_password_invalid['email'] not in created_guest_emails
+    
 
+def test_hashed_password_stored_in_db(db_connection, web_client):
+    guest_repo = GuestRepository(db_connection)
+    data =  {
+            'name' : 'Big Jim',
+            'email' : "jimmy-test3@example.com",
+            'password' : 'Password1234!'
+            }
+    
+    web_client.post('/signupguest', json=data)
 
+    guests = guest_repo.find_all()
+    created_guest = guests[-1]
+    assert created_guest.password != data['password']
+    
 

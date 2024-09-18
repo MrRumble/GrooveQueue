@@ -17,28 +17,29 @@ def get_all_guests():
     # Convert list of Guest objects to list of dictionaries
     guests_dict = [guest.to_dict() for guest in all_guests]
 
-    return jsonify(guests_dict), 200 
+    return jsonify(guests_dict), 200
 
 # Route to create a new guest
 @guest_bp.route('/guests', methods=['POST'])
 def create_guest():
     data = request.form
     
-    print(data)
-
     # Validate the input data
     if not data or not all(key in data for key in ['name', 'email', 'password']):
-        return jsonify(error="Missing required fields"), 400
-    
-    # validate OAuth2 fields if they are provided
+        flash("Missing required fields", "error")
+        return redirect(url_for('guest_bp.sign_up_guest_route'))
+
+    # Validate OAuth2 fields if they are provided
     oauth_provider = data.get('oauth_provider')
     oauth_provider_id = data.get('oauth_provider_id')
 
     if oauth_provider and not isinstance(oauth_provider, str):
-        return jsonify(error="Invalid OAuth provider format"), 400
+        flash("Invalid OAuth provider format", "error")
+        return redirect(url_for('guest_bp.sign_up_guest_route'))
 
     if oauth_provider_id and not isinstance(oauth_provider_id, str):
-        return jsonify(error="Invalid OAuth provider ID format"), 400
+        flash("Invalid OAuth provider ID format", "error")
+        return redirect(url_for('guest_bp.sign_up_guest_route'))
 
     guest = Guest(
         name=data.get('name'),
@@ -49,12 +50,18 @@ def create_guest():
     )
 
     try:
-        result = sign_up_guest(guest)
-        return jsonify(message=result), 201
+        sign_up_guest(guest)
+        flash("Registration successful! Please log in.", "success")
+        return redirect(url_for('guest_bp.login_route'))
     except ValueError as e:
-        return jsonify(error=str(e)), 400
+        flash(str(e), "error")
+        return redirect(url_for('guest_bp.sign_up_guest_route'))
 
 # Route to render the signup page
 @guest_bp.route('/signupguest', methods=['GET'])
 def sign_up_guest_route():
     return render_template('signup_guest.html')
+
+@guest_bp.route('/login', methods=['GET'])
+def login_route():
+    return render_template('login_guest.html')
