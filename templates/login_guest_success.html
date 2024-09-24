@@ -17,6 +17,6 @@
         <li><strong>Email:</strong> {{ session.guest_email }}</li> 
     </ul>
 
-    <a href="">Logout</a>
+    <a href="{{ url_for('guest_bp.logout_user') }}">Logout</a>
 </body>
 </html>

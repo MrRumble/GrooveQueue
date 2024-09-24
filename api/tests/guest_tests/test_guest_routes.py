@@ -1,5 +1,5 @@
 import pytest
-from flask import url_for
+from flask import url_for, session
 from werkzeug.security import check_password_hash
 from api.guests.guest_model import Guest
 from api.guests.guest_repository import GuestRepository
@@ -213,5 +213,35 @@ def test_hashed_password_stored_in_db(db_connection, web_client):
     guests = guest_repo.find_all()
     created_guest = guests[-1]
     assert created_guest.password != data['password']
-    
+
+def test_login_guest_success(db_connection, web_client):
+    db_connection.seed("../seeds/guests_table_test_data.sql")
+    data = {
+        'email': 'john.doe@example.com',
+        'password': 'password123'
+    }
+    response = web_client.post('/login', data=data)
+    assert response.status_code == 302
+
+def test_login_guest_failure(db_connection, web_client):
+    db_connection.seed("../seeds/guests_table_test_data.sql")
+    data = {
+        'email': 'john.doe@example.com',
+        'password': 'wrongpassword'
+    }
+    response = web_client.post('/login', data=data)
+    assert response.status_code == 302
+
+def test_logout_guest(db_connection, web_client):
+    db_connection.seed("../seeds/guests_table_test_data.sql")
+    data = {
+        'email': 'john.doe@example.com',
+        'password': 'password123'
+    }
+    response = web_client.post('/login', data=data)
+    assert response.status_code == 302  
+    response = web_client.post('/logout')
+    assert response.status_code == 302
+    assert session.get('guest_id') is None
+
 

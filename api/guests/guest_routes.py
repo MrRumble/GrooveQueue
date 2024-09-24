@@ -3,7 +3,6 @@ from api.guests.guest_model import Guest
 from api.guests.guest_repository import GuestRepository
 from api.guests.guest_signup import sign_up_guest
 from api.common.db import get_flask_database_connection
-from authlib.integrations.flask_client import OAuth
 from werkzeug.security import check_password_hash
 # Blueprint setup
 guest_bp = Blueprint('guest_bp', __name__)
@@ -74,13 +73,9 @@ def login_guest_route():
     data = request.form
     email = data.get('email')
     password = data.get('password')
-    print('entered login', email, password)
-
     connection = get_flask_database_connection(current_app)
     guest_repo = GuestRepository(connection)
     guest = guest_repo.find_by_email(email)
-    print('guest', guest)
-    print('guest.password', guest.password)
     
     if guest and check_password_hash(guest.password, password):
         session['guest_id'] = guest.id
