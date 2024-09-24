@@ -77,3 +77,11 @@ class GuestRepository():
         query = "SELECT 1 FROM guests WHERE email = %s LIMIT 1"
         rows = self._connection.execute(query, [email])
         return len(rows) > 0
+
+    def find_by_email(self, email: str) -> Guest:
+        query = "SELECT * FROM guests WHERE email = %s LIMIT 1"
+        rows = self._connection.execute(query, [email])
+        if len(rows) == 0:
+            return None
+        return Guest(**rows[0])
+    

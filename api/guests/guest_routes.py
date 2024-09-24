@@ -1,9 +1,10 @@
-from flask import Blueprint, request, jsonify, current_app, render_template, redirect, url_for, flash
+from flask import Blueprint, request, jsonify, current_app, render_template, redirect, url_for, flash, session
 from api.guests.guest_model import Guest
 from api.guests.guest_repository import GuestRepository
 from api.guests.guest_signup import sign_up_guest
 from api.common.db import get_flask_database_connection
-
+from authlib.integrations.flask_client import OAuth
+from werkzeug.security import check_password_hash
 # Blueprint setup
 guest_bp = Blueprint('guest_bp', __name__)
 
@@ -56,6 +57,8 @@ def create_guest():
     except ValueError as e:
         flash(str(e), "error")
         return redirect(url_for('guest_bp.sign_up_guest_route'))
+    
+
 
 # Route to render the signup page
 @guest_bp.route('/signupguest', methods=['GET'])
@@ -65,3 +68,31 @@ def sign_up_guest_route():
 @guest_bp.route('/login', methods=['GET'])
 def login_route():
     return render_template('login_guest.html')
+
+@guest_bp.route('/login', methods=['POST'])
+def login_guest_route():
+    data = request.form
+    email = data.get('email')
+    password = data.get('password')
+    print('entered login', email, password)
+
+    connection = get_flask_database_connection(current_app)
+    guest_repo = GuestRepository(connection)
+    guest = guest_repo.find_by_email(email)
+    print('guest', guest)
+    print('guest.password', guest.password)
+    
+    if guest and check_password_hash(guest.password, password):
+        session['guest_id'] = guest.id
+        session['guest_name'] = guest.name
+        session['guest_email'] = guest.email
+        return render_template('login_guest_success.html')
+    else:
+        flash("Invalid email or password", "error")
+        return redirect(url_for('guest_bp.login_route'))
+    
+@guest_bp.route('/logout', methods=['POST'])
+def logout_user():
+    session.clear()
+    return redirect(url_for('guest_bp.login_route'))
+    

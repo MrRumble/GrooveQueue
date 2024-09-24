@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Successful</title>
+</head>
+<body>
+    <h1>Login Successful!</h1>
+    <p>Welcome, <strong>{{ session.guest_name }}</strong>!</p>
+    <p>Your email is: <strong>{{ session.guest_email }}</strong></p> 
+    
+    <h2>Details:</h2>
+    <ul>
+        <li><strong>Guest ID:</strong> {{ session.guest_id }}</li>
+        <li><strong>Name:</strong> {{ session.guest_name }}</li>
+        <li><strong>Email:</strong> {{ session.guest_email }}</li> 
+    </ul>
+
+    <a href="">Logout</a>
+</body>
+</html>
