@@ -86,3 +86,18 @@ def test_sign_up_guest_name_empty_string(app):
         )
         with pytest.raises(ValueError, match='Name cannot be empty'):
             sign_up_guest(invalid_guest)
+
+def test_password_hash(app):
+    with app.app_context():
+        new_guest = Guest(
+            name="James Rumble",
+            email="jimrumbles@example.com",
+            password="SecureP@ssw0rd",
+            oauth_provider=None,
+            oauth_provider_id=None
+        )
+        sign_up_guest(new_guest)
+        connection = get_flask_database_connection(app)
+        guests = connection.execute("SELECT * FROM guests WHERE email = %s", [new_guest.email])
+        assert len(guests) == 1
+        assert guests[0]['password'] != 'SecureP@ssw0rd'
