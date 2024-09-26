@@ -51,7 +51,7 @@ const GuestHomepage = () => {
                     <h2>User Details:</h2>
                     <p><strong>Name:</strong> {userDetails.name}</p>
                     <p><strong>Email:</strong> {userDetails.email}</p>
-                    <p><strong>User ID:</strong> {userDetails.user_id}</p>
+                    <p><strong>User ID:</strong> {userDetails.id}</p>
                     {/* Display more user details as needed */}
                 </div>
             ) : (

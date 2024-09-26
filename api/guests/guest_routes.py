@@ -81,6 +81,7 @@ def get_current_guest():
     connection = get_flask_database_connection(current_app)
     guest_repo = GuestRepository(connection)
     guest = guest_repo.find(current_guest_id)
+    print(guest)
 
     if not guest:
         return jsonify(error="Guest not found"), 404
