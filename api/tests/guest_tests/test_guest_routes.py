@@ -170,3 +170,34 @@ def test_create_guest_oauth_field_wrong_data_type(web_client):
 
     response_json = response.get_json()
     assert response_json['error'] == "Invalid OAuth provider format"
+
+def test_login_guest_incorrect_credentials_returns_error(web_client):
+    data = {
+        'email': 'jane.smith@example.com',
+        'password': 'wrongpassword'
+    }
+    response = web_client.post('/guests/login', json=data)
+    assert response.status_code == 401
+    response_json = response.get_json()
+    assert response_json['error'] == "Invalid email or password"
+
+def test_login_guest_missing_email_returns_error(web_client):
+    data = {
+        'password': 'securepass456'
+    }
+    response = web_client.post('/guests/login', json=data)
+    assert response.status_code == 400
+    response_json = response.get_json()
+    assert response_json['error'] == "Missing email or password"
+    
+def test_login_guest_missing_password_returns_error(web_client):
+    data = {
+        'email': 'jane.smith@example.com'
+    }
+    response = web_client.post('/guests/login', json=data)
+    assert response.status_code == 400
+    response_json = response.get_json()
+    assert response_json['error'] == "Missing email or password"
+
+# TODO Integration testing 
+

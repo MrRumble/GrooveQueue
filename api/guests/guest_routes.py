@@ -3,6 +3,9 @@ from api.guests.guest_model import Guest
 from api.guests.guest_repository import GuestRepository
 from api.guests.guest_signup import sign_up_guest
 from api.common.db import get_flask_database_connection
+from werkzeug.security import check_password_hash
+from flask_jwt_extended import create_access_token, jwt_required
+from datetime import timedelta
 
 # Blueprint setup
 guest_bp = Blueprint('guest_bp', __name__)
@@ -51,3 +54,30 @@ def create_guest():
         return jsonify(message=result), 201
     except ValueError as e:
         return jsonify(error=str(e)), 400
+
+@guest_bp.route('/guests/login', methods=['POST'])  
+def login_guest():
+    print("login_guest function called")
+    data = request.json
+    email = data.get('email')
+    password = data.get('password')
+
+    if not email or not password:
+        return jsonify(error="Missing email or password"), 400
+
+    connection = get_flask_database_connection(current_app)
+    guest_repo = GuestRepository(connection)
+    guest = guest_repo.find_by_email(email)
+
+    if not guest or not check_password_hash(guest.password, password):
+        return jsonify(error="Invalid email or password"), 401
+
+    access_token = create_access_token(identity=guest.id, expires_delta=timedelta(minutes=30))  # Token expires in 30 minutes
+    print(jsonify(access_token=access_token, email=guest.email, user_id=guest.id))
+    return jsonify(access_token=access_token, email=guest.email, user_id=guest.id), 200
+
+@guest_bp.route('/protected', methods=['GET'])
+@jwt_required()
+def protected():
+    return jsonify(message="This is a protected route"), 200
+

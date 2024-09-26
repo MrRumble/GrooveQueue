@@ -1,5 +1,5 @@
-// src/components/SignUpGuest.js
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom'; // Step 1: Import useNavigate
 
 const SignUpGuest = () => {
     const [name, setName] = useState('');
@@ -9,6 +9,8 @@ const SignUpGuest = () => {
     const [oauthProviderId, setOauthProviderId] = useState('');
     const [error, setError] = useState('');
     const [message, setMessage] = useState('');
+
+    const navigate = useNavigate(); // Step 2: Use useNavigate to get navigate function
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -38,12 +40,16 @@ const SignUpGuest = () => {
 
             setMessage(data.message);
             setError(''); // Clear any previous error
+
             // Optionally reset the form fields
             setName('');
             setEmail('');
             setPassword('');
             setOauthProvider('');
             setOauthProviderId('');
+
+            // Step 3: Navigate to the login page after successful sign up
+            navigate('/loginguest');
 
         } catch (err) {
             setError(err.message);
@@ -54,7 +60,7 @@ const SignUpGuest = () => {
     return (
         <div>
             <h2>Sign Up as a Guest</h2>
-            <form onSubmit={handleSubmit}>
+            <form onSubmit={handleSubmit} noValidate>
                 <div>
                     <label>Name:</label>
                     <input 
@@ -80,22 +86,6 @@ const SignUpGuest = () => {
                         value={password} 
                         onChange={(e) => setPassword(e.target.value)} 
                         required 
-                    />
-                </div>
-                <div>
-                    <label>OAuth Provider (optional):</label>
-                    <input 
-                        type="text" 
-                        value={oauthProvider} 
-                        onChange={(e) => setOauthProvider(e.target.value)} 
-                    />
-                </div>
-                <div>
-                    <label>OAuth Provider ID (optional):</label>
-                    <input 
-                        type="text" 
-                        value={oauthProviderId} 
-                        onChange={(e) => setOauthProviderId(e.target.value)} 
                     />
                 </div>
                 <button type="submit">Sign Up</button>

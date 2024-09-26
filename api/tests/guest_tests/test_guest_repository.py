@@ -263,5 +263,10 @@ def test_guest_email_exists(db_connection):
     false_result = guest_repo.email_exists("unique-email@example.com")   # Not test DB
     assert false_result is False
 
+def test_find_by_email(db_connection):
+    guest_repo = GuestRepository(db_connection)
+    result = guest_repo.find_by_email("jane.smith@example.com")
+    assert result is not None
+    assert result.email == "jane.smith@example.com"
 
 
