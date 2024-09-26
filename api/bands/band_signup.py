@@ -3,6 +3,7 @@ from api.bands.band_model import Band
 from api.common.db import get_flask_database_connection
 from api.utils.validators import validate_email, validate_password
 from flask import current_app
+from werkzeug.security import generate_password_hash
 
 def sign_up_band(band: Band) -> str:
     connection = get_flask_database_connection(current_app)
@@ -24,6 +25,8 @@ def sign_up_band(band: Band) -> str:
     if band_repo.email_exists(band.band_email):
         raise ValueError("Email already in use")
     
+    hashed_password = generate_password_hash(band.password)
+    band.password = hashed_password
     # If validations pass, create the band
     band_repo.create(band)
     return "New Band created and stored in db."

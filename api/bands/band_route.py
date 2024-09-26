@@ -3,7 +3,8 @@ from api.bands.band_model import Band
 from api.bands.band_repository import BandRepository
 from api.bands.band_signup import sign_up_band  # Function for signing up a band
 from api.common.db import get_flask_database_connection
-
+from flask_jwt_extended import jwt_required, get_jwt_identity, create_access_token
+from werkzeug.security import check_password_hash
 # Blueprint setup
 band_bp = Blueprint('band_bp', __name__)
 
@@ -51,3 +52,31 @@ def create_band():
         return jsonify(message=result), 201
     except ValueError as e:
         return jsonify(error=str(e)), 400
+    
+@band_bp.route('/bands/login', methods=['POST'])
+def login_band():
+    data = request.json
+    email = data.get('band_email')
+    password = data.get('password')
+
+    if not email or not password:
+        return jsonify(error="Missing email or password"), 400  
+    
+    connection = get_flask_database_connection(current_app)
+    band_repo = BandRepository(connection)
+    band = band_repo.find_by_email(email)
+
+    if not band or not check_password_hash(band.password, password):
+        return jsonify(error="Invalid email or password"), 401
+    
+    access_token = create_access_token(identity=band.band_id)
+    return jsonify(access_token=access_token, email=band.band_email, band_id=band.band_id, band_name=band.band_name), 200
+
+@band_bp.route('/band/current', methods=['GET'])
+@jwt_required()
+def get_current_band():
+    current_band_id = get_jwt_identity()
+    connection = get_flask_database_connection(current_app)
+    band_repo = BandRepository(connection)
+    band = band_repo.find(current_band_id)
+    return jsonify(band.to_dict()), 200

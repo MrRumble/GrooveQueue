@@ -87,3 +87,7 @@ def get_current_guest():
         return jsonify(error="Guest not found"), 404
 
     return jsonify(guest.to_dict()), 200
+
+@guest_bp.route('/guest/logout', methods=['POST'])
+def logout_guest():
+    return jsonify(message="Guest logged out successfully"), 200
