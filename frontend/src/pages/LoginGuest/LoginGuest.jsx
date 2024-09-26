@@ -1,9 +1,12 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const LoginGuest = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState(null); // State to manage error messages
+
+    const navigate = useNavigate();
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -28,6 +31,7 @@ const LoginGuest = () => {
             localStorage.setItem('access_token', data.access_token);
             localStorage.setItem('email', data.email);
             localStorage.setItem('user_id', data.user_id);
+            navigate('/guest-homepage');
             // Optionally, store the token or redirect the user here
 
         } catch (error) {
