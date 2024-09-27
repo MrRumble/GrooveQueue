@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import Navbar from '../../components/Navbar/Navbar';
 
 const LoginBand = () => {
     const [bandEmail, setBandEmail] = useState('');
@@ -41,6 +42,7 @@ const LoginBand = () => {
 
     return (
         <div>
+            <Navbar />
             <h2>Band Login</h2>
             {error && <p style={{ color: 'red' }}>{error}</p>} {/* Display error message */}
             <form onSubmit={handleSubmit}>

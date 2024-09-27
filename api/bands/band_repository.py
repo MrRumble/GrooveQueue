@@ -84,8 +84,11 @@ class BandRepository:
     def find_by_email(self, email: str) -> Band:
         query = "SELECT * FROM bands WHERE band_email = %s LIMIT 1"
         rows = self._connection.execute(query, [email])
+        
+        # Check if any rows are returned
         if not rows:
             raise ValueError("Band not found")
+        
         row = rows[0]
         return Band(
             band_id=row['band_id'],

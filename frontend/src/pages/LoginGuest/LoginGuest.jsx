@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import Navbar from '../../components/Navbar/Navbar';
 
 const LoginGuest = () => {
     const [email, setEmail] = useState('');
@@ -42,6 +43,7 @@ const LoginGuest = () => {
 
     return (
         <div>
+            <Navbar />
             <h2>Login</h2>
             {error && <p style={{ color: 'red' }}>{error}</p>} {/* Display error message */}
             <form onSubmit={handleSubmit}>

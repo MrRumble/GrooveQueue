@@ -5,32 +5,39 @@ const Navbar = () => {
     const navigate = useNavigate();
 
     const handleLogout = async () => {
-        const token = localStorage.getItem('access_token');
+        const guestToken = localStorage.getItem('access_token'); // Adjust this based on your actual token naming
+        const bandToken = localStorage.getItem('band_access_token'); // Adjust this based on your actual token naming
 
-        // Call the logout API to revoke the token on the server
-        if (token) {
-            try {
+        // Determine which token is present and call the appropriate logout API
+        try {
+            if (guestToken) {
                 await fetch('http://localhost:5001/guest/logout', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
                     },
-                    body: JSON.stringify({ token }), // Send the token in the request body
+                    body: JSON.stringify({ token: guestToken }), // Send the guest token
                 });
 
-                // Clear any user data from local storage
-                localStorage.removeItem('access_token');
-                localStorage.removeItem('email');
-                localStorage.removeItem('user_id');
+                // Clear guest data from local storage
+                localStorage.clear();
+            } else if (bandToken) {
+                await fetch('http://localhost:5001/band/logout', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ token: bandToken }), // Send the band token
+                });
 
-                // Redirect to login page
-                navigate('/loginguest');
-            } catch (error) {
-                console.error('Logout failed:', error);
+                // Clear band data from local storage
+                localStorage.clear();
             }
-        } else {
-            // If there's no token, just navigate to the login page
+
+            // Redirect to login page
             navigate('/');
+        } catch (error) {
+            console.error('Logout failed:', error);
         }
     };
 

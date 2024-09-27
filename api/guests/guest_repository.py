@@ -81,5 +81,10 @@ class GuestRepository():
     def find_by_email(self, email: str) -> Guest:
         query = "SELECT * FROM guests WHERE email = %s LIMIT 1"
         rows = self._connection.execute(query, [email])
-        row = rows[0]
-        return Guest(**row) if row else None
+
+        # Check if any rows were returned before accessing the first row
+        if rows:
+            row = rows[0]
+            return Guest(**row)
+        else:
+            return None  # No guest found with the given email
