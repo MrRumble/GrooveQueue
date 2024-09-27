@@ -6,7 +6,7 @@ from api.common.db import get_flask_database_connection
 from flask_jwt_extended import jwt_required, get_jwt_identity, create_access_token
 from werkzeug.security import check_password_hash
 from datetime import timedelta
-from api.current_session.session import current_session
+
 
 # Blueprint setup
 band_bp = Blueprint('band_bp', __name__)
@@ -67,7 +67,7 @@ def login_band():
 
     connection = get_flask_database_connection(current_app)
     band_repo = BandRepository(connection)
-    
+
     try:
         band = band_repo.find_by_email(email)
     except ValueError as e:
@@ -76,12 +76,6 @@ def login_band():
     if not band or not check_password_hash(band.password, password):
         return jsonify(error="Invalid email or password"), 401
 
-    # Prevent guest login if a band is already logged in
-    if current_session["type"] == "guest":
-        return jsonify(error="You are logged in as a guest. Please log out before logging in as a band."), 403
-
-    # Set current session type
-    current_session["type"] = "band"
 
     access_token = create_access_token(identity=band.band_id, expires_delta=timedelta(minutes=30))
     return jsonify(access_token=access_token, email=band.band_email, band_id=band.band_id, band_name=band.band_name), 200
@@ -97,5 +91,4 @@ def get_current_band():
 
 @band_bp.route('/band/logout', methods=['POST'])
 def logout_band():
-    current_session["type"] = None
     return jsonify(message="Band logged out successfully"), 200

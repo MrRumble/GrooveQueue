@@ -6,7 +6,7 @@ from api.common.db import get_flask_database_connection
 from werkzeug.security import check_password_hash
 from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity
 from datetime import timedelta
-from api.current_session.session import current_session
+
 # Blueprint setup
 guest_bp = Blueprint('guest_bp', __name__)
 
@@ -66,17 +66,13 @@ def login_guest():
 
     connection = get_flask_database_connection(current_app)
     guest_repo = GuestRepository(connection)
-    guest = guest_repo.find_by_email(email)
+    try:
+        guest = guest_repo.find_by_email(email)
+    except ValueError as e:
+        return jsonify(error=str(e)), 404
 
     if not guest or not check_password_hash(guest.password, password):
         return jsonify(error="Invalid email or password"), 401
-
-    # Prevent band login if a guest is already logged in
-    if current_session["type"] == "band":
-        return jsonify(error="You are logged in as a band. Please log out before logging in as a guest."), 403
-
-    # Set current session type
-    current_session["type"] = "guest"
 
     access_token = create_access_token(identity=guest.id, expires_delta=timedelta(minutes=30))
     return jsonify(access_token=access_token, email=guest.email, guest_id=guest.id, name=guest.name), 200
@@ -96,5 +92,4 @@ def get_current_guest():
 
 @guest_bp.route('/guest/logout', methods=['POST'])
 def logout_guest():
-    current_session["type"] = None
     return jsonify(message="Guest logged out successfully"), 200
