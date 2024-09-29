@@ -55,7 +55,7 @@ def create_guest():
     except ValueError as e:
         return jsonify(error=str(e)), 400
 
-@guest_bp.route('/guests/login', methods=['POST'])  
+@guest_bp.route('/guests/login', methods=['POST'])
 def login_guest():
     data = request.json
     email = data.get('email')
@@ -66,13 +66,16 @@ def login_guest():
 
     connection = get_flask_database_connection(current_app)
     guest_repo = GuestRepository(connection)
-    guest = guest_repo.find_by_email(email)
+    try:
+        guest = guest_repo.find_by_email(email)
+    except ValueError as e:
+        return jsonify(error=str(e)), 404
 
     if not guest or not check_password_hash(guest.password, password):
         return jsonify(error="Invalid email or password"), 401
 
-    access_token = create_access_token(identity=guest.id, expires_delta=timedelta(minutes=30))  # Token expires in 30 minutes
-    return jsonify(access_token=access_token, email=guest.email, user_id=guest.id), 200
+    access_token = create_access_token(identity=guest.id, expires_delta=timedelta(minutes=30))
+    return jsonify(access_token=access_token, email=guest.email, guest_id=guest.id, name=guest.name), 200
 
 @guest_bp.route('/guest/current', methods=['GET'])
 @jwt_required()
@@ -81,9 +84,12 @@ def get_current_guest():
     connection = get_flask_database_connection(current_app)
     guest_repo = GuestRepository(connection)
     guest = guest_repo.find(current_guest_id)
-    print(guest)
 
     if not guest:
         return jsonify(error="Guest not found"), 404
 
     return jsonify(guest.to_dict()), 200
+
+@guest_bp.route('/guest/logout', methods=['POST'])
+def logout_guest():
+    return jsonify(message="Guest logged out successfully"), 200

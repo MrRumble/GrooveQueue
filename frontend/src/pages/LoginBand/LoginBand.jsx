@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Navbar from '../../components/Navbar/Navbar';
 
-const LoginGuest = () => {
-    const [email, setEmail] = useState('');
+const LoginBand = () => {
+    const [bandEmail, setBandEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState(null); // State to manage error messages
 
@@ -13,25 +13,25 @@ const LoginGuest = () => {
         e.preventDefault();
         setError(null);
 
-        // Check if there's a logged-in band session
+        // Check if there's a logged-in guest session
         const existingUserType = localStorage.getItem('userType');
-        if (existingUserType === 'band') {
-            // Clear existing session data for band
+        if (existingUserType === 'guest') {
+            // Clear existing session data for guest
             localStorage.removeItem('access_token');
-            localStorage.removeItem('band_email');
-            localStorage.removeItem('band_id');
+            localStorage.removeItem('email');
+            localStorage.removeItem('user_id');
         }
 
-        // Set the user type to guest
-        localStorage.setItem('userType', 'guest');
+        // Set the user type to band
+        localStorage.setItem('userType', 'band');
 
         try {
-            const response = await fetch('http://localhost:5001/guests/login', {
+            const response = await fetch('http://localhost:5001/bands/login', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ email, password }),
+                body: JSON.stringify({ band_email: bandEmail, password }), // Note the field names
             });
 
             if (!response.ok) {
@@ -42,9 +42,9 @@ const LoginGuest = () => {
             const data = await response.json();
             console.log('Login successful:', data);
             localStorage.setItem('access_token', data.access_token);
-            localStorage.setItem('email', data.email);
-            localStorage.setItem('user_id', data.user_id);
-            navigate('/guest-homepage');
+            localStorage.setItem('band_email', data.band_email);
+            localStorage.setItem('band_id', data.band_id);
+            navigate('/band-homepage'); // Navigate to the band's homepage after successful login
 
         } catch (error) {
             setError(error.message); // Update error state with the error message
@@ -55,15 +55,15 @@ const LoginGuest = () => {
     return (
         <div>
             <Navbar />
-            <h2>Login</h2>
+            <h2>Band Login</h2>
             {error && <p style={{ color: 'red' }}>{error}</p>} {/* Display error message */}
             <form onSubmit={handleSubmit}>
                 <div>
-                    <label>Email:</label>
+                    <label>Band Email:</label>
                     <input 
                         type="email" 
-                        value={email} 
-                        onChange={(e) => setEmail(e.target.value)} 
+                        value={bandEmail} 
+                        onChange={(e) => setBandEmail(e.target.value)} 
                         required 
                     />
                 </div>
@@ -82,4 +82,4 @@ const LoginGuest = () => {
     );
 };
 
-export default LoginGuest;
+export default LoginBand;

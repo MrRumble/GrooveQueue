@@ -97,3 +97,32 @@ def test_create_band_oauth_field_wrong_data_type(web_client):
 
     response_json = response.get_json()
     assert response_json['error'] == "Invalid OAuth provider format"
+
+def test_login_band_correct_credentials_returns_token(web_client):
+    data = {
+        'band_email': "bluesbrothers@example.com",
+        'password': 'BluesPass123!',
+    }
+    
+    response = web_client.post('/bands/login', json=data)
+    assert response.status_code == 200
+
+    response_json = response.get_json()
+    print(response_json)
+    assert 'access_token' in response_json
+    assert 'band_id' in response_json
+    assert 'band_name' in response_json
+    assert 'email' in response_json
+
+def test_login_band_incorrect_credentials_returns_error(web_client):
+    data = {
+        'band_email': "bluesbrothers@example.com",
+        'password': 'IncorrectPassword!',
+    }
+    
+    response = web_client.post('/bands/login', json=data)
+    assert response.status_code == 401
+
+
+    
+

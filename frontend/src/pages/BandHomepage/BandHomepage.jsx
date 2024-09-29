@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import Navbar from '../../components/Navbar/Navbar';
 
-const GuestHomepage = () => {
-    const [userDetails, setUserDetails] = useState(null);
+const BandHomepage = () => {
+    const [bandDetails, setBandDetails] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
     useEffect(() => {
-        const fetchUserDetails = async () => {
+        const fetchBandDetails = async () => {
             const token = localStorage.getItem('access_token'); // Use the correct key for your token
 
             if (!token) {
@@ -17,7 +17,7 @@ const GuestHomepage = () => {
             }
 
             try {
-                const response = await fetch('http://localhost:5001/guest/current', { // Ensure the endpoint matches your server
+                const response = await fetch('http://localhost:5001/band/current', { // Ensure the endpoint matches your server
                     method: 'GET',
                     headers: {
                         'Authorization': `Bearer ${token}`,
@@ -26,11 +26,11 @@ const GuestHomepage = () => {
                 });
 
                 if (!response.ok) {
-                    throw new Error('Failed to fetch user details');
+                    throw new Error('Failed to fetch band details');
                 }
 
                 const data = await response.json();
-                setUserDetails(data);
+                setBandDetails(data);
             } catch (err) {
                 setError(err.message);
             } finally {
@@ -38,7 +38,7 @@ const GuestHomepage = () => {
             }
         };
         
-        fetchUserDetails();
+        fetchBandDetails();
     }, []);
 
     if (loading) return <div>Loading...</div>;
@@ -47,19 +47,19 @@ const GuestHomepage = () => {
     return (
         <div>
             <Navbar />
-            <h1>Welcome to the Guest Homepage!</h1>
-            {userDetails ? (
+            <h1>Welcome to the Band Homepage!</h1>
+            {bandDetails ? (
                 <div>
-                    <h2>User Details:</h2>
-                    <p><strong>Name:</strong> {userDetails.name}</p>
-                    <p><strong>Email:</strong> {userDetails.email}</p>
-                    <p><strong>User ID:</strong> {userDetails.id}</p>
+                    <h2>Band Details:</h2>
+                    <p><strong>Band Name:</strong> {bandDetails.band_name}</p>
+                    <p><strong>Band Email:</strong> {bandDetails.band_email}</p>
+                    <p><strong>Band ID:</strong> {bandDetails.band_id}</p>
                 </div>
             ) : (
-                <p>No user details available.</p>
+                <p>No band details available.</p>
             )}
         </div>
     );
 };
 
-export default GuestHomepage;
+export default BandHomepage;

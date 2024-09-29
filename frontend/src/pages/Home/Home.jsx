@@ -1,9 +1,11 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import Navbar from '../../components/Navbar/Navbar';
 
 const Home = () => {
 return (
     <div className="home-container">
+        <Navbar />
         <header className="header">
             <h1>Welcome to GrooveQueue</h1>
             <p>Your ultimate event management and guest interaction platform.</p>
