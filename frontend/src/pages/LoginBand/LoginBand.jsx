@@ -11,10 +11,22 @@ const LoginBand = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        setError(null); 
-        
+        setError(null);
+
+        // Check if there's a logged-in guest session
+        const existingUserType = localStorage.getItem('userType');
+        if (existingUserType === 'guest') {
+            // Clear existing session data for guest
+            localStorage.removeItem('access_token');
+            localStorage.removeItem('email');
+            localStorage.removeItem('user_id');
+        }
+
+        // Set the user type to band
+        localStorage.setItem('userType', 'band');
+
         try {
-            const response = await fetch('http://localhost:5001/bands/login', { // Ensure the endpoint matches your server
+            const response = await fetch('http://localhost:5001/bands/login', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
