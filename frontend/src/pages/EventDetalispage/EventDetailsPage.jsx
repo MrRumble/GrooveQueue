@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom'; // To retrieve the event ID from the URL
 import Navbar from '../../components/Navbar/Navbar'; // Assuming you have a Navbar component
 
-
 const EventDetails = () => {
     const { eventId } = useParams(); // Extract the event ID from the URL
     const [event, setEvent] = useState(null);
@@ -48,6 +47,7 @@ const EventDetails = () => {
                     <p><strong>Start:</strong> {new Date(event.event_start).toLocaleString()}</p>
                     <p><strong>End:</strong> {new Date(event.event_end).toLocaleString()}</p>
                     <p><strong>QR Code Content:</strong> {event.qr_code_content}</p>
+                    <p><strong>Band Name:</strong> {event.band_name}</p> {/* Display band name here */}
                 </div>
             ) : (
                 <p>No event details available.</p>
