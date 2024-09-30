@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom'; // Import Link for navigation
 import Navbar from '../../components/Navbar/Navbar';
 
 const BandHomepage = () => {
@@ -54,6 +55,11 @@ const BandHomepage = () => {
                     <p><strong>Band Name:</strong> {bandDetails.band_name}</p>
                     <p><strong>Band Email:</strong> {bandDetails.band_email}</p>
                     <p><strong>Band ID:</strong> {bandDetails.band_id}</p>
+
+                    {/* Link to the Create New Event page */}
+                    <Link to="/create-event">
+                        <button>Create New Event</button>
+                    </Link>
                 </div>
             ) : (
                 <p>No band details available.</p>
