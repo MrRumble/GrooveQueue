@@ -1,6 +1,7 @@
 from flask import Blueprint, request, jsonify, current_app
 from api.events.event_model import Event
 from api.events.event_repository import EventRepository
+from api.events.event_create import create_event as create_new_event
 from api.common.db import get_flask_database_connection
 
 # Blueprint setup
@@ -54,8 +55,8 @@ def create_event():
     event_repo = EventRepository(connection)
 
     try:
-        event_id = event_repo.create(event)
-        return jsonify(event_id=event_id), 201
+        created_event_id = create_new_event(event)
+        return jsonify(event_id=created_event_id), 201
     except Exception as e:
         return jsonify(error=str(e)), 400
 
