@@ -12,6 +12,7 @@ import CreateEvent from './components/CreateEventComponent/CreateEventComponent'
 import EventDetails from './pages/EventDetalispage/EventDetailsPage';
 import CurrentBandEvents from './components/CurrentBandEventsComponent/CurrentBandEventsComponent';
 import BandEvents from './components/BandEventsComponent/BandEventsComponent';
+import CreateRequestForm from './components/CreateRequestComponent/CreateRequestComponent';
 
 const App = () => {
     return (
@@ -28,6 +29,8 @@ const App = () => {
                 <Route path="/events/:eventId" element={<EventDetails/>} />
                 <Route path="/current-band-events" element={<CurrentBandEvents/>} />
                 <Route path="/bands/:bandId/events" element={<BandEvents />} />
+                <Route path="/events/:eventId/requests" element={<CreateRequestForm />} />
+                
             </Routes>
         </Router>
     );
