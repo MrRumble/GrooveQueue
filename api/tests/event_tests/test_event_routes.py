@@ -88,6 +88,7 @@ def test_get_event_by_id(db_connection, web_client):
     response_json = response.get_json()
     expected_data = {
         "event_id": 1,
+        "band_name": "White Noise",
         "event_name": "Rocking the City",
         "location": "Madison Square Garden, New York",
         "event_start": "2024-09-15T19:00:00",
@@ -98,9 +99,9 @@ def test_get_event_by_id(db_connection, web_client):
         "updated_at": "PLACEHOLDER"
     }
 
+
     stripped_actual = strip_timestamps([response_json])[0]
     stripped_expected = strip_timestamps([expected_data])[0]
-
     assert stripped_actual == stripped_expected
 
 def test_get_event_not_found(db_connection, web_client):

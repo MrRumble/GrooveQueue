@@ -39,8 +39,7 @@ def test_create_new_event_valid_details(app):
                 updated_at=datetime(2024, 8, 15, 12, 0)  # Updated on August 15, 2024, 12:00
             )
 
-            result = create_event(test_event)
-            assert result == "Event successfully created."
+            create_event(test_event)
 
             connection = get_flask_database_connection(app)
             event = connection.execute("SELECT * FROM events WHERE event_name = %s", [test_event.event_name])

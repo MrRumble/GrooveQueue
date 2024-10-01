@@ -22,6 +22,4 @@ def create_event(event: Event) -> str:
     
     connection = get_flask_database_connection(current_app)
     event_repo = EventRepository(connection)
-    event_repo.create(event)
-
-    return "Event successfully created."
+    return event_repo.create(event)

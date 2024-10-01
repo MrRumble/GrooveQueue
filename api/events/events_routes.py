@@ -1,7 +1,10 @@
 from flask import Blueprint, request, jsonify, current_app
 from api.events.event_model import Event
 from api.events.event_repository import EventRepository
+from api.bands.band_repository import BandRepository
+from api.events.event_create import create_event as create_new_event
 from api.common.db import get_flask_database_connection
+from flask_jwt_extended import jwt_required, get_jwt_identity
 
 # Blueprint setup
 event_bp = Blueprint('event_bp', __name__)
@@ -18,17 +21,24 @@ def get_all_events():
 
     return jsonify(events_dict), 200
 
-# Route to get a single event by ID
 @event_bp.route('/events/<int:event_id>', methods=['GET'])
 def get_event(event_id):
     connection = get_flask_database_connection(current_app)
     event_repo = EventRepository(connection)
     event = event_repo.find(event_id)
-
+    
     if event is None:
         return jsonify(error="Event not found"), 404
+    
+    band_repo = BandRepository(connection)
+    band_details = band_repo.find(event.band_id)
 
-    return jsonify(event.to_dict()), 200
+    response_data = {
+        **event.to_dict(),  
+        'band_name': band_details.band_name  
+    }
+
+    return jsonify(response_data), 200
 
 # Route to create a new event
 @event_bp.route('/events', methods=['POST'])
@@ -50,12 +60,9 @@ def create_event():
         updated_at=data.get('updated_at')
     )
 
-    connection = get_flask_database_connection(current_app)
-    event_repo = EventRepository(connection)
-
     try:
-        event_id = event_repo.create(event)
-        return jsonify(event_id=event_id), 201
+        created_event_id = create_new_event(event)
+        return jsonify(event_id=created_event_id), 201
     except Exception as e:
         return jsonify(error=str(e)), 400
 
@@ -105,10 +112,32 @@ def delete_event(event_id):
 def get_events_by_band(band_id):
     connection = get_flask_database_connection(current_app)
     event_repo = EventRepository(connection)
+    band_repo = BandRepository(connection)
+
+    band = band_repo.find(band_id)
+    
+    if not band:
+        return jsonify(error="Band not found"), 404
+    band_name = band.band_name
     events = event_repo.find_events_by_band_id(band_id)
 
     if not events:
         return jsonify(error="No events found for this band"), 404
+    
+    response_data = {
+        'band_name': band_name,
+        'events': [event.to_dict() for event in events]
+    }
+    return jsonify(response_data), 200
 
-    events_dict = [event.to_dict() for event in events]
-    return jsonify(events_dict), 200
+@event_bp.route('/bands/current/events', methods=['GET'])
+@jwt_required()
+def get_current_band_events():
+    current_band_id = get_jwt_identity()
+    connection = get_flask_database_connection(current_app)
+    event_repo = EventRepository(connection)
+    events = event_repo.find_events_by_band_id(current_band_id)
+
+    if not events:
+        return jsonify(error="No events found for this band"), 404
+    return jsonify([event.to_dict() for event in events]), 200
