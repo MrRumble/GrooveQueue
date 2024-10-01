@@ -60,6 +60,11 @@ const BandHomepage = () => {
                     <Link to="/create-event">
                         <button>Create New Event</button>
                     </Link>
+
+                    {/* Link to the Current Band Events page */}
+                    <Link to="/current-band-events" style={{ marginLeft: '10px' }}>
+                        <button>View {bandDetails.band_name}'s Events</button>
+                    </Link>
                 </div>
             ) : (
                 <p>No band details available.</p>

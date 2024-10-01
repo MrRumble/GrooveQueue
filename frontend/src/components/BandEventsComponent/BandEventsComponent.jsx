@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom'; // Import useParams from react-router-dom
+import Navbar from '../Navbar/Navbar';
 
 const BandEvents = () => {
   const { bandId } = useParams(); // Get bandId from URL parameters
-  const [events, setEvents] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [bandName, setBandName] = useState(''); // State to hold the band name
+  const [events, setEvents] = useState([]); // State to hold events
+  const [loading, setLoading] = useState(true); // State to handle loading
+  const [error, setError] = useState(null); // State to handle errors
 
   useEffect(() => {
     const fetchEvents = async () => {
@@ -18,10 +20,9 @@ const BandEvents = () => {
         });
 
         // Log the entire response to see what's being returned
-        console.log('Response:', response);
         console.log('Band ID:', bandId); // Log the bandId for debugging
 
-        // Check if the response is an HTML error page
+        // Check if the response is not OK
         if (!response.ok) {
           if (response.status === 404) {
             setError('No events found for this band');
@@ -29,16 +30,17 @@ const BandEvents = () => {
             throw new Error(`Failed to fetch events: ${response.statusText}`);
           }
         } else {
-          // Try parsing the response as JSON
+          // Parse the JSON response
           const data = await response.json();
-          setEvents(data);
+          setBandName(data.band_name); // Set the band name from the response
+          setEvents(data.events); // Set the events from the response
         }
       } catch (err) {
         // Log the error for better debugging
         console.error('Error:', err);
         setError(err.message || 'Failed to fetch events');
       } finally {
-        setLoading(false);
+        setLoading(false); // Turn off loading state after the fetch completes
       }
     };
 
@@ -55,7 +57,8 @@ const BandEvents = () => {
 
   return (
     <div>
-      <h2>Events for Band {bandId}</h2>
+      <Navbar />
+      <h2>Events for Band: {bandName}</h2> {/* Display band name */}
       {events.length > 0 ? (
         <ul>
           {events.map((event) => (

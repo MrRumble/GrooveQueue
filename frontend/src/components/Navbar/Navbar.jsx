@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import './Navbar.css'; // Import the CSS file
 
 const Navbar = () => {
     const navigate = useNavigate();
@@ -42,13 +43,14 @@ const Navbar = () => {
     };
 
     return (
-        <nav>
-            <ul>
-                <li><Link to="/signupguest">Sign Up Guest</Link></li>
-                <li><Link to="/signupband">Sign Up Band</Link></li>
-                <li><Link to="/loginguest">Login Guest</Link></li>
-                <li><Link to="/loginband">Login Band</Link></li>
-                <li><button onClick={handleLogout}>Logout</button></li>
+        <nav className="navbar">
+            <ul className="nav-list">
+                <li className="nav-item"><Link className="nav-link" to="/signupguest">Sign Up Guest</Link></li>
+                <li className="nav-item"><Link className="nav-link" to="/signupband">Sign Up Band</Link></li>
+                <li className="nav-item"><Link className="nav-link" to="/loginguest">Login Guest</Link></li>
+                <li className="nav-item"><Link className="nav-link" to="/loginband">Login Band</Link></li>
+                <li className="nav-item"><Link className="nav-link" to="/band-homepage">My Band</Link></li>
+                <li className="nav-item"><button className="logout-button" onClick={handleLogout}>Logout</button></li>
             </ul>
         </nav>
     );

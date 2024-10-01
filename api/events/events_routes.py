@@ -110,17 +110,25 @@ def delete_event(event_id):
 # Route to get events by band ID
 @event_bp.route('/bands/<int:band_id>/events', methods=['GET'])
 def get_events_by_band(band_id):
-    print("I AM CALLED!")
     connection = get_flask_database_connection(current_app)
     event_repo = EventRepository(connection)
+    band_repo = BandRepository(connection)
+
+    band = band_repo.find(band_id)
+    
+    if not band:
+        return jsonify(error="Band not found"), 404
+    band_name = band.band_name
     events = event_repo.find_events_by_band_id(band_id)
-    print(band_id)
 
     if not events:
         return jsonify(error="No events found for this band"), 404
-
-    events_dict = [event.to_dict() for event in events]
-    return jsonify(events_dict), 200
+    
+    response_data = {
+        'band_name': band_name,
+        'events': [event.to_dict() for event in events]
+    }
+    return jsonify(response_data), 200
 
 @event_bp.route('/bands/current/events', methods=['GET'])
 @jwt_required()
@@ -132,5 +140,4 @@ def get_current_band_events():
 
     if not events:
         return jsonify(error="No events found for this band"), 404
-
     return jsonify([event.to_dict() for event in events]), 200
