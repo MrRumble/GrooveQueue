@@ -75,6 +75,16 @@ def test_find_all_bands(db_connection):
             created_at=None,
             updated_at=None
         ),
+        Band(
+            band_id=4,
+            band_name='No Events Band',
+            band_email='noevents@example.com',
+            password='bandpass123',
+            oauth_provider=None,
+            oauth_provider_id=None,
+            created_at=None,
+            updated_at=None
+        )
         # Add more Band objects as needed
     ]
     
@@ -116,8 +126,8 @@ def test_create_band(db_connection):
     
     # Insert the new band into the database
     band_repo.create(new_band)
-    found_band = band_repo.find(4)  # Assuming ID 4 is the new band
-    assert found_band.band_id == 4
+    found_band = band_repo.find(5) 
+    assert found_band.band_id == 5
     assert found_band.band_name == "New Band"
     assert found_band.band_email == "new.band@example.com"
     assert found_band.password == "newbandpass"
@@ -181,9 +191,8 @@ def test_delete_band(db_connection):
     # Assert that the band was deleted
     assert band_found is False
 
-    # Optionally, check that the number of bands has decreased by one
     all_bands = band_repo.find_all()
-    assert len(all_bands) == 2  # Adjust according to initial data count
+    assert len(all_bands) == 3  
 
 def test_band_email_exists(db_connection):
     band_repo = BandRepository(db_connection)
