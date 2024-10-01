@@ -3,7 +3,7 @@ from api.requests.request_repository import RequestRepository
 from api.common.db import get_flask_database_connection
 from flask import current_app
 
-def create_request(request: Request) -> str:
+def validate_create_request(request: Request) -> str:
     """
     Create a new request in the database.
 

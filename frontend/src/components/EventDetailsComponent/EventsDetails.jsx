@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom'; // To get the event_id from the URL
+import { useParams, Link } from 'react-router-dom'; // Import Link to create navigation links
+import Navbar from '../Navbar/Navbar';
 
 const EventDetails = () => {
   const { eventId } = useParams(); // Extract the eventId from the URL parameters
@@ -44,6 +45,7 @@ const EventDetails = () => {
 
   return (
     <div>
+      <Navbar />
       {event ? (
         <div>
           <h2>Event Details</h2>
@@ -53,6 +55,11 @@ const EventDetails = () => {
           <p><strong>Starts:</strong> {new Date(event.event_start).toLocaleString()}</p>
           <p><strong>Ends:</strong> {new Date(event.event_end).toLocaleString()}</p>
           <p><strong>QR Code Content:</strong> {event.qr_code_content}</p>
+          
+          {/* Link to create a request */}
+          <Link to={`/events/${eventId}/requests`} style={{ display: 'inline-block', marginTop: '20px' }}>
+            <button>Create Song Request</button>
+          </Link>
         </div>
       ) : (
         <p>No event details available.</p>

@@ -9,9 +9,11 @@ import LoginBand from './pages/LoginBand/LoginBand';
 import BandHomepage from './pages/BandHomepage/BandHomepage';
 import ProtectedRoute from './components/ProtectedRouteComponent/ProtectedRoute';
 import CreateEvent from './components/CreateEventComponent/CreateEventComponent';
-import EventDetails from './pages/EventDetalispage/EventDetailsPage';
+import EventDetails from './components/EventDetailsComponent/EventsDetails';
 import CurrentBandEvents from './components/CurrentBandEventsComponent/CurrentBandEventsComponent';
 import BandEvents from './components/BandEventsComponent/BandEventsComponent';
+import CreateRequestForm from './components/CreateRequestComponent/CreateRequestComponent';
+import AllEvents from './components/AllEventsComponent/AllEvents';
 
 const App = () => {
     return (
@@ -28,6 +30,9 @@ const App = () => {
                 <Route path="/events/:eventId" element={<EventDetails/>} />
                 <Route path="/current-band-events" element={<CurrentBandEvents/>} />
                 <Route path="/bands/:bandId/events" element={<BandEvents />} />
+                <Route path="/events" element={<AllEvents />} />
+                <Route path="/events/:eventId/requests" element={<CreateRequestForm />} />
+                
             </Routes>
         </Router>
     );

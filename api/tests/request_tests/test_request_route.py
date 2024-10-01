@@ -11,6 +11,7 @@ def seed_database(db_connection):
     db_connection.seed("../seeds/guests_table_test_data.sql")
     db_connection.seed("../seeds/requests_table_test_data.sql")
 
+# Test for getting request by request ID (remains unchanged)
 def test_get_request_by_request_id(db_connection, web_client):
     seed_database(db_connection)
     response = web_client.get('/requests/1')
@@ -30,47 +31,49 @@ def test_get_request_by_request_id(db_connection, web_client):
     stripped_expected = strip_timestamps([expected_data])[0]
     assert stripped_actual == stripped_expected
 
+# Test for request not found (remains unchanged)
 def test_get_request_by_request_id_not_found(db_connection, web_client):
     seed_database(db_connection)
     response = web_client.get('/requests/99')
     assert response.status_code == 404
     assert response.get_json() == {"error": "Request not found"}
 
+# Test for creating a request (POST) - updated to match new route
 def test_post_request_valid_entry(db_connection, web_client):
     seed_database(db_connection)
     new_request = {
         "song_name": "Imagine",
-        "guest_id": 5,
-        "event_id": 5,
+        "guest_id": 5
     }
 
-    response = web_client.post('/requests', json=new_request)
+    response = web_client.post('/events/5/requests', json=new_request)  # Use /events/<event_id>/requests
     assert response.status_code == 201
     assert "request_id" in response.get_json()
 
+# Test for missing field (POST) - updated to match new route
 def test_post_request_missing_field(db_connection, web_client):
     seed_database(db_connection)
 
     new_request = {
-        "guest_id": 5,
-        "event_id": 5,
+        "guest_id": 5
     }
-    response = web_client.post('/requests', json=new_request)
+    response = web_client.post('/events/5/requests', json=new_request)  # Use /events/<event_id>/requests
     assert response.status_code == 400
     assert response.get_json() == {"error": "Missing required fields"}
 
+# Test for invalid entry (POST) - updated to match new route
 def test_post_request_invalid_entry(db_connection, web_client):
     seed_database(db_connection)
 
     new_request = {
-        "song_name": "  ",
-        "guest_id": 5,
-        "event_id": 5,
+        "song_name": "  ",  # Invalid song name
+        "guest_id": 5
     }
-    response = web_client.post('/requests', json=new_request)
+    response = web_client.post('/events/5/requests', json=new_request)  # Use /events/<event_id>/requests
     assert response.status_code == 400
     assert response.get_json() == {"error": "Song name cannot be empty"}
 
+# Test for updating a request (remains unchanged)
 def test_put_request_successful_update(db_connection, web_client):
     seed_database(db_connection)
     
@@ -80,7 +83,7 @@ def test_put_request_successful_update(db_connection, web_client):
         "event_id": 2
     }
 
-    response = web_client.put('/requests/1', json=updated_data)
+    response = web_client.put('/requests/1', json=updated_data)  # Update remains the same
     assert response.status_code == 200
     assert response.get_json() == {"message": "Request updated successfully"}
 
@@ -100,12 +103,12 @@ def test_put_request_successful_update(db_connection, web_client):
     stripped_expected = strip_timestamps([expected_data])[0]
     assert stripped_actual == stripped_expected
 
-
+# Test for invalid data in PUT request (remains unchanged)
 def test_put_request_invalid_data(db_connection, web_client):
     seed_database(db_connection)
     
     updated_data = {
-        "song_name": "  ", 
+        "song_name": "  ",  # Invalid song name
         "guest_id": 2,
         "event_id": 2
     }
@@ -114,6 +117,7 @@ def test_put_request_invalid_data(db_connection, web_client):
     assert response.status_code == 400
     assert response.get_json() == {"error": "Song name cannot be empty"}
 
+# Test for updating a non-existent request (remains unchanged)
 def test_put_request_not_found(db_connection, web_client):
     seed_database(db_connection)
     
@@ -123,15 +127,16 @@ def test_put_request_not_found(db_connection, web_client):
         "event_id": 2
     }
 
-    response = web_client.put('/requests/99', json=updated_data)
+    response = web_client.put('/requests/99', json=updated_data)  # Update remains the same
     assert response.status_code == 404
     assert response.get_json() == {"error": "Request not found"}
 
+# Test for getting requests by event ID (GET) - updated to match new route
 def test_get_requests_by_event_id_success(db_connection, web_client):
     seed_database(db_connection)
     
     # Test for event_id that should have requests
-    response = web_client.get('/requests/event/1')
+    response = web_client.get('/events/1/requests')  # Use /events/<event_id>/requests
     assert response.status_code == 200
     
     response_json = response.get_json()
@@ -158,15 +163,11 @@ def test_get_requests_by_event_id_success(db_connection, web_client):
     stripped_expected = strip_timestamps(expected_data)
     assert stripped_actual == stripped_expected
 
+# Test for event ID with no requests (GET) - updated to match new route
 def test_get_requests_by_event_id_no_requests(db_connection, web_client):
     seed_database(db_connection)
     
     # Test for an event_id that has no requests
-    response = web_client.get('/requests/event/99')
+    response = web_client.get('/events/99/requests')  # Use /events/<event_id>/requests
     assert response.status_code == 404
     assert response.get_json() == {"error": "No requests found for this event"}
-
-
-
-
-

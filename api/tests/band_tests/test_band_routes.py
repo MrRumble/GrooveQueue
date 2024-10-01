@@ -44,6 +44,16 @@ def test_get_all_bands(db_connection, web_client):
             "created_at": "PLACEHOLDER",
             "updated_at": "PLACEHOLDER"
         },
+        {
+            "band_id": 4,
+            "band_name": "No Events Band",
+            "band_email": "noevents@example.com",
+            "password": "bandpass123",
+            "oauth_provider": None,
+            "oauth_provider_id": None,
+            "created_at": "PLACEHOLDER",
+            "updated_at": "PLACEHOLDER"
+        }
 
     ]
 

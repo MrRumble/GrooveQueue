@@ -74,7 +74,11 @@ def login_guest():
     if not guest or not check_password_hash(guest.password, password):
         return jsonify(error="Invalid email or password"), 401
 
-    access_token = create_access_token(identity=guest.id, expires_delta=timedelta(minutes=30))
+    access_token = create_access_token(
+        identity=guest.id, 
+        expires_delta=timedelta(minutes=30),
+        additional_claims={"role": "guest"}  # Include role in the token
+    )
     return jsonify(access_token=access_token, email=guest.email, guest_id=guest.id, name=guest.name), 200
 
 @guest_bp.route('/guest/current', methods=['GET'])

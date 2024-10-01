@@ -171,45 +171,77 @@ def test_delete_event(db_connection, web_client):
     assert response_json == {"error": "Event not found"}
 
 def test_get_events_by_band_id(db_connection, web_client):
+    # Seed the database with test data
     db_connection.seed("../seeds/events_table_test_data.sql")
+    
+    # Make a GET request to the endpoint
     response = web_client.get('/bands/1/events')
+    
+    # Assert the status code is 200 (OK)
     assert response.status_code == 200
 
+    # Get the JSON response
     response_json = response.get_json()
-    expected_data = [
-        {
-            "event_id": 1,
-            "event_name": "Rocking the City",
-            "location": "Madison Square Garden, New York",
-            "event_start": "2024-09-15T19:00:00",
-            "event_end": "2024-09-15T23:00:00",
-            "qr_code_content": "rocking_the_city_qr_code_001",
-            "band_id": 1,
-            "created_at": "PLACEHOLDER",
-            "updated_at": "PLACEHOLDER"
-        },
-        {
-            "event_id": 4,
-            "event_name": "Summer Festival",
-            "location": "Hyde Park, London",
-            "event_start": "2024-08-25T12:00:00",
-            "event_end": "2024-08-25T22:00:00",
-            "qr_code_content": "summer_festival_qr_code_004",
-            "band_id": 1,
-            "created_at": "PLACEHOLDER",
-            "updated_at": "PLACEHOLDER"
-        }
-    ]
+    
+    # Define the expected output structure
+    expected_data = {
+        "band_name": "White Noise",  # Replace with the actual band name from your test data
+        "events": [
+            {
+                "event_id": 1,
+                "event_name": "Rocking the City",
+                "location": "Madison Square Garden, New York",
+                "event_start": "2024-09-15T19:00:00",
+                "event_end": "2024-09-15T23:00:00",
+                "qr_code_content": "rocking_the_city_qr_code_001",
+                "band_id": 1,
+                "created_at": "PLACEHOLDER",  # Adjust this as necessary
+                "updated_at": "PLACEHOLDER"   # Adjust this as necessary
+            },
+            {
+                "event_id": 4,
+                "event_name": "Summer Festival",
+                "location": "Hyde Park, London",
+                "event_start": "2024-08-25T12:00:00",
+                "event_end": "2024-08-25T22:00:00",
+                "qr_code_content": "summer_festival_qr_code_004",
+                "band_id": 1,
+                "created_at": "PLACEHOLDER",  # Adjust this as necessary
+                "updated_at": "PLACEHOLDER"   # Adjust this as necessary
+            }
+        ]
+    }
 
-    stripped_actual = strip_timestamps(response_json)
-    stripped_expected = strip_timestamps(expected_data)
+    # Strip timestamps from the actual response
+    stripped_actual = {
+        "band_name": response_json["band_name"],
+        "events": strip_timestamps(response_json["events"])
+    }
+    
+    # Prepare the expected data by stripping timestamps
+    stripped_expected = {
+        "band_name": expected_data["band_name"],
+        "events": strip_timestamps(expected_data["events"])
+    }
 
+    # Assert that the stripped actual response matches the stripped expected response
     assert stripped_actual == stripped_expected
 
-def test_get_events_by_band_id_no_events(db_connection, web_client):
+def test_get_events_by_non_existent_band_id(db_connection, web_client):
     db_connection.seed("../seeds/events_table_test_data.sql")
-    response = web_client.get('/bands/999/events')  # Assuming 999 has no events
+    
+    # Test for a band ID that does not exist
+    response = web_client.get('/bands/999/events')  # Assuming 999 does not exist
     assert response.status_code == 404
+    response_json = response.get_json()
+    assert response_json == {"error": "Band not found"}
 
+def test_get_events_by_existing_band_id_no_events(db_connection, web_client):
+    db_connection.seed("../seeds/events_table_test_data.sql")
+    
+    # Test for a band ID that exists but has no events
+    response = web_client.get('/bands/4/events')  # Assuming band 1 exists but has no events
+    assert response.status_code == 404
     response_json = response.get_json()
     assert response_json == {"error": "No events found for this band"}
+
