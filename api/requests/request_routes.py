@@ -3,6 +3,7 @@ from api.requests.request_model import Request
 from api.requests.request_repository import RequestRepository
 from api.common.db import get_flask_database_connection
 from datetime import datetime
+from api.events.event_repository import EventRepository
 
 request_bp = Blueprint('request_bp', __name__)
 
@@ -18,24 +19,32 @@ def get_request_by_id(request_id: int):
 
     return jsonify(request_item.to_dict()), 200  
 
-@request_bp.route('/requests', methods=['POST'])
-def create_request():
+@request_bp.route('/events/<int:event_id>/requests', methods=['POST'])
+def create_request(event_id):
     connection = get_flask_database_connection(current_app)
     request_repo = RequestRepository(connection)
+    event_repo = EventRepository(connection)
 
     data = request.get_json()
     
-    if not data or not all(key in data for key in ['song_name', 'guest_id', 'event_id']):
+    # Check if the event exists
+    event = event_repo.find(event_id)
+    if not event:
+        return jsonify(error="Invalid event ID: event not found"), 400
+
+    # Validate input fields
+    if not data or not all(key in data for key in ['song_name', 'guest_id']):
         return jsonify(error="Missing required fields"), 400
     
     if data['song_name'].strip() == "":
         return jsonify(error="Song name cannot be empty"), 400
 
+    # Create the new request
     new_request = Request(
         song_name=data['song_name'],
         guest_id=data['guest_id'],
-        event_id=data['event_id'],
-        created_at=datetime.now(),  # Ensure timestamps are set
+        event_id=event_id,  # Now we use the event_id from the URL
+        created_at=datetime.now(),
         updated_at=datetime.now()
     )
 
@@ -73,7 +82,7 @@ def update_request(request_id):
     
     return jsonify({"message": "Request updated successfully"}), 200
 
-@request_bp.route('/requests/event/<int:event_id>', methods=['GET'])
+@request_bp.route('/events/<int:event_id>/requests', methods=['GET'])
 def get_requests_by_event_id(event_id):
     connection = get_flask_database_connection(current_app)
     request_repo = RequestRepository(connection)

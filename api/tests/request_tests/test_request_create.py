@@ -4,7 +4,7 @@ from flask import Flask
 import os
 from datetime import datetime
 from api.requests.request_model import Request
-from api.requests.request_create import create_request
+from api.requests.request_create import validate_create_request
 
 @pytest.fixture(scope='module')
 def app():
@@ -36,7 +36,7 @@ def test_create_new_request_valid_details(app):
             updated_at=request_date
         )
 
-        result = create_request(test_request)
+        result = validate_create_request(test_request)
         assert result == "Request successfully created."
 
         connection = get_flask_database_connection(app)
@@ -56,7 +56,7 @@ def test_create_request_empty_song_name(app):
             updated_at=request_date
         )
         with pytest.raises(ValueError, match="Song name cannot be empty"):
-            create_request(invalid_request)
+            validate_create_request(invalid_request)
 
 def test_create_request_missing_guest_id(app):
     with app.app_context():
@@ -70,7 +70,7 @@ def test_create_request_missing_guest_id(app):
             updated_at=request_date
         )
         with pytest.raises(ValueError, match="Guest ID is required"):
-            create_request(invalid_request)
+            validate_create_request(invalid_request)
 
 def test_create_request_missing_event_id(app):
     with app.app_context():
@@ -84,6 +84,6 @@ def test_create_request_missing_event_id(app):
             updated_at=request_date
         )
         with pytest.raises(ValueError, match="Event ID is required"):
-            create_request(invalid_request)
+            validate_create_request(invalid_request)
 
 # Add more tests as needed to cover other edge cases
