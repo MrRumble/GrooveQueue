@@ -50,6 +50,7 @@ const Navbar = () => {
                 <li className="nav-item"><Link className="nav-link" to="/loginguest">Login Guest</Link></li>
                 <li className="nav-item"><Link className="nav-link" to="/loginband">Login Band</Link></li>
                 <li className="nav-item"><Link className="nav-link" to="/band-homepage">My Band</Link></li>
+                <li className="nav-item"><Link className="nav-link" to="/events">View All Events</Link></li>
                 <li className="nav-item"><button className="logout-button" onClick={handleLogout}>Logout</button></li>
             </ul>
         </nav>
