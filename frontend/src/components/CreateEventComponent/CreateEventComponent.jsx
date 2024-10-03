@@ -8,8 +8,10 @@ const CreateEvent = () => {
     const [eventStart, setEventStart] = useState('');
     const [eventEnd, setEventEnd] = useState('');
     const [qrCodeContent, setQrCodeContent] = useState('');
+    const [maxRequests, setMaxRequests] = useState(''); // New state for max requests
     const [error, setError] = useState(null);
     const [success, setSuccess] = useState(null);
+    const [loading, setLoading] = useState(false);
 
     const navigate = useNavigate();
 
@@ -26,6 +28,19 @@ const CreateEvent = () => {
             return;
         }
 
+        if (new Date(eventStart) >= new Date(eventEnd)) {
+            setError("Event end time must be after event start time.");
+            return;
+        }
+
+        // Validate that max requests is a number and positive
+        if (maxRequests < 0 || isNaN(maxRequests)) {
+            setError("Max requests must be a positive number.");
+            return;
+        }
+
+        setLoading(true); // Start loading
+
         try {
             const response = await fetch('http://localhost:5001/events', {
                 method: 'POST',
@@ -39,6 +54,7 @@ const CreateEvent = () => {
                     event_start: eventStart,
                     event_end: eventEnd,
                     qr_code_content: qrCodeContent,
+                    max_requests_per_user: maxRequests, // Include max requests in the request body
                     band_id: bandId, // Include the band ID in the request
                 }),
             });
@@ -53,6 +69,8 @@ const CreateEvent = () => {
             navigate('/band-homepage'); // Redirect to the band's homepage after success
         } catch (err) {
             setError(err.message);
+        } finally {
+            setLoading(false); // End loading
         }
     };
 
@@ -107,7 +125,18 @@ const CreateEvent = () => {
                         onChange={(e) => setQrCodeContent(e.target.value)}
                     />
                 </div>
-                <button type="submit">Create Event</button>
+                <div>
+                    <label>Max Requests:</label>
+                    <input
+                        type="number"
+                        value={maxRequests}
+                        onChange={(e) => setMaxRequests(e.target.value)}
+                        required
+                    />
+                </div>
+                <button type="submit" disabled={loading}>
+                    {loading ? 'Creating Event...' : 'Create Event'}
+                </button>
             </form>
         </div>
     );

@@ -15,7 +15,7 @@
 - **band_name**: VARCHAR(255) NOT NULL
 - **band_email**: VARCHAR(255) UNIQUE NOT NULL
 - **password**: VARCHAR(255) NOT NULL (store hashed)
- **oauth_provider**: VARCHAR(255) -- Nullable, stores OAuth provider name
+- **oauth_provider**: VARCHAR(255) -- Nullable, stores OAuth provider name
 - **oauth_provider_id**: VARCHAR(255), -- Nullable, stores unique ID from the OAuth provider
 - **created_at**: TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 - **updated_at**: TIMESTAMP DEFAULT CURRENT_TIMESTAMP
@@ -28,6 +28,7 @@
 - **event_end**: TIMESTAMP NOT NULL
 - **qr_code_content**: VARCHAR(2048) NOT NULL
 - **band_id**: INTEGER NOT NULL REFERENCES bands(band_id)
+- **max_requests_per_user** INTEGER DEFAULT NULL
 - **created_at**: TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 - **updated_at**: TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 
