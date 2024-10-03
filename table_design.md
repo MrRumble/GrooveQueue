@@ -40,25 +40,10 @@
 - **created_at**: TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 - **updated_at**: TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 
-
-## Table: OAuth Tokens
-
-| Field           | Data Type          | Description                                             |
-|-----------------|---------------------|---------------------------------------------------------|
-| `token_id`      | `SERIAL PRIMARY KEY` | Unique identifier for each token entry                 |
-| `user_id`       | `INTEGER`           | Foreign key linking to the `guests` table (nullable)   |
-| `band_id`       | `INTEGER`           | Foreign key linking to the `bands` table (nullable)    |
-| `access_token`  | `TEXT`              | The actual access token provided by the OAuth provider |
-| `refresh_token` | `TEXT`              | The refresh token provided by the OAuth provider (nullable) |
-| `token_type`    | `VARCHAR(255)`      | Type of token (e.g., 'Bearer')                          |
-| `expires_at`    | `TIMESTAMP`         | Expiry timestamp of the access token                   |
-| `created_at`    | `TIMESTAMP DEFAULT CURRENT_TIMESTAMP` | Timestamp when the token was created  |
-| `updated_at`    | `TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP` | Timestamp when the token was last updated |
-
-### Constraints
-- **Valid User or Band**: Ensures that either `user_id` or `band_id` is provided, but not both.
-  ```sql
-  CONSTRAINT valid_user_or_band CHECK (
-      (user_id IS NOT NULL AND band_id IS NULL) OR
-      (user_id IS NULL AND band_id IS NOT NULL)
-  )
+## Table: attendance
+- **attendance_id**: SERIAL PRIMARY KEY
+- **guest_id**: INTEGER NOT NULL REFERENCES guests(id)
+- **event_id**: INTEGER NOT NULL REFERENCES events(event_id)
+- **status**: VARCHAR(50) NOT NULL DEFAULT 'pending' -- Status could be 'pending', 'approved', 'declined'
+- **created_at**: TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+- **updated_at**: TIMESTAMP DEFAULT CURRENT_TIMESTAMP

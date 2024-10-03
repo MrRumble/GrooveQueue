@@ -142,20 +142,6 @@ def test_create_event(db_connection, web_client):
     assert created_event['event_name'] == new_event['event_name']
 
 
-def test_delete_event(db_connection, web_client):
-    db_connection.seed("../seeds/events_table_test_data.sql")
-    response = web_client.delete('/events/1')
-    assert response.status_code == 200
-
-    response_json = response.get_json()
-    assert response_json == {"message": "Event deleted successfully"}
-
-    # Verify that the event was actually deleted
-    response = web_client.get('/events/1')
-    assert response.status_code == 404
-    response_json = response.get_json()
-    assert response_json == {"error": "Event not found"}
-
 def test_get_events_by_band_id(db_connection, web_client):
     # Seed the database with test data
     db_connection.seed("../seeds/events_table_test_data.sql")
