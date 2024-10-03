@@ -35,6 +35,7 @@ def test_create_new_event_valid_details(app):
                 event_end=event_end,
                 qr_code_content="https://example.com/event/1",
                 band_id=1,
+                max_requests_per_user=3,
                 created_at=datetime(2024, 8, 1, 12, 0),  # August 1, 2024, 12:00
                 updated_at=datetime(2024, 8, 15, 12, 0)  # Updated on August 15, 2024, 12:00
             )

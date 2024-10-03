@@ -14,6 +14,7 @@ import CurrentBandEvents from './components/CurrentBandEventsComponent/CurrentBa
 import BandEvents from './components/BandEventsComponent/BandEventsComponent';
 import CreateRequestForm from './components/CreateRequestComponent/CreateRequestComponent';
 import AllEvents from './components/AllEventsComponent/AllEvents';
+import UpdateEvent from './components/UpdateEventComponent/UpdateEventComponent';
 
 const App = () => {
     return (
@@ -27,6 +28,7 @@ const App = () => {
                 <Route path="/loginband" element={<LoginBand />} />
                 <Route path="/band-homepage" element={<ProtectedRoute><BandHomepage /></ProtectedRoute>} />
                 <Route path="/create-event" element={<ProtectedRoute><CreateEvent/></ProtectedRoute>} />
+                <Route path="/update-event/:eventId" element={<ProtectedRoute><UpdateEvent /></ProtectedRoute>} />
                 <Route path="/events/:eventId" element={<EventDetails/>} />
                 <Route path="/current-band-events" element={<CurrentBandEvents/>} />
                 <Route path="/bands/:bandId/events" element={<BandEvents />} />

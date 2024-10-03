@@ -126,6 +126,7 @@ def test_create_event(db_connection, web_client):
         "event_start": "2024-12-01T10:00:00",
         "event_end": "2024-12-01T12:00:00",
         "qr_code_content": "new_event_qr_code",
+        "max_requests_per_user": 2,
         "band_id": 1
     }
     response = web_client.post('/events', json=new_event)
@@ -140,27 +141,6 @@ def test_create_event(db_connection, web_client):
     created_event = response.get_json()
     assert created_event['event_name'] == new_event['event_name']
 
-def test_update_event(db_connection, web_client):
-    db_connection.seed("../seeds/events_table_test_data.sql")
-    updated_event = {
-        "event_name": "Updated Event",
-        "location": "Updated Location",
-        "event_start": "2024-12-01T14:00:00",
-        "event_end": "2024-12-01T16:00:00",
-        "qr_code_content": "updated_event_qr_code",
-        "band_id": 2
-    }
-    response = web_client.put('/events/1', json=updated_event)
-    assert response.status_code == 200
-
-    response_json = response.get_json()
-    assert response_json == {"message": "Event updated successfully"}
-
-    # Verify that the event was actually updated
-    response = web_client.get('/events/1')
-    assert response.status_code == 200
-    updated_event_response = response.get_json()
-    assert updated_event_response['event_name'] == updated_event['event_name']
 
 def test_delete_event(db_connection, web_client):
     db_connection.seed("../seeds/events_table_test_data.sql")

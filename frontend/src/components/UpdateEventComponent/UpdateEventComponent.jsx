@@ -1,49 +1,79 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
 import Navbar from '../../components/Navbar/Navbar';
+import { jwtDecode } from 'jwt-decode'; // Import the jwt-decode library
 
-const CreateEvent = () => {
+const UpdateEvent = () => {
     const [eventName, setEventName] = useState('');
     const [location, setLocation] = useState('');
     const [eventStart, setEventStart] = useState('');
     const [eventEnd, setEventEnd] = useState('');
     const [qrCodeContent, setQrCodeContent] = useState('');
-    const [maxRequests, setMaxRequests] = useState(''); // New state for max requests
+    const [maxRequests, setMaxRequests] = useState('');
     const [error, setError] = useState(null);
     const [success, setSuccess] = useState(null);
-    const [loading, setLoading] = useState(false);
-
     const navigate = useNavigate();
+    const { eventId } = useParams(); // Get the event ID from the URL
+
+    // Check if the user is logged in
+    useEffect(() => {
+        const token = localStorage.getItem('access_token');
+        if (!token) {
+            navigate('/loginband'); // Redirect to login if not authenticated
+        }
+    }, [navigate]);
+
+    useEffect(() => {
+        // Fetch the current event details
+        const fetchEventDetails = async () => {
+            const token = localStorage.getItem('access_token');
+
+            try {
+                const response = await fetch(`http://localhost:5001/events/${eventId}`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                    },
+                });
+
+                if (!response.ok) {
+                    const { error } = await response.json();
+                    throw new Error(error || 'Failed to fetch event details');
+                }
+
+                const eventData = await response.json();
+                setEventName(eventData.event_name);
+                setLocation(eventData.location);
+                setEventStart(eventData.event_start);
+                setEventEnd(eventData.event_end);
+                setQrCodeContent(eventData.qr_code_content || '');
+                setMaxRequests(eventData.max_requests_per_user || '');
+            } catch (err) {
+                setError(err.message);
+            }
+        };
+
+        fetchEventDetails();
+    }, [eventId]);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         setError(null);
         setSuccess(null);
 
-        const token = localStorage.getItem('access_token'); // Use the token for authorization
-        const bandId = localStorage.getItem('band_id'); // Get band ID from localStorage
+        const token = localStorage.getItem('access_token');
 
         if (!token) {
-            setError("You must be logged in to create an event.");
+            setError("You must be logged in to update an event.");
             return;
         }
-
-        if (new Date(eventStart) >= new Date(eventEnd)) {
-            setError("Event end time must be after event start time.");
-            return;
-        }
-
-        // Validate that max requests is a number and positive
-        if (maxRequests < 0 || isNaN(maxRequests)) {
-            setError("Max requests must be a positive number.");
-            return;
-        }
-
-        setLoading(true); // Start loading
 
         try {
-            const response = await fetch('http://localhost:5001/events', {
-                method: 'POST',
+            // Decode the token to extract band_id
+            const decodedToken = jwtDecode(token);
+            const bandId = decodedToken.sub; // Ensure 'band_id' matches the key in your token
+
+            const response = await fetch(`http://localhost:5001/events/${eventId}`, {
+                method: 'PUT',
                 headers: {
                     'Authorization': `Bearer ${token}`,
                     'Content-Type': 'application/json',
@@ -54,30 +84,27 @@ const CreateEvent = () => {
                     event_start: eventStart,
                     event_end: eventEnd,
                     qr_code_content: qrCodeContent,
-                    max_requests_per_user: maxRequests, // Include max requests in the request body
-                    band_id: bandId, // Include the band ID in the request
+                    max_requests_per_user: parseInt(maxRequests, 10) || null, // Ensure it's an integer
+                    band_id: bandId // Include band_id in the request body
                 }),
             });
 
             if (!response.ok) {
                 const { error } = await response.json();
-                throw new Error(error || 'Failed to create event');
+                throw new Error(error || 'Failed to update event');
             }
 
-            const data = await response.json();
-            setSuccess('Event created successfully!');
-            navigate('/band-homepage'); // Redirect to the band's homepage after success
+            setSuccess('Event updated successfully!');
+            navigate('/band-homepage'); // Redirect after success
         } catch (err) {
             setError(err.message);
-        } finally {
-            setLoading(false); // End loading
         }
     };
 
     return (
         <div>
             <Navbar />
-            <h1>Create a New Event</h1>
+            <h1>Update Event</h1>
             {error && <p style={{ color: 'red' }}>{error}</p>}
             {success && <p style={{ color: 'green' }}>{success}</p>}
             <form onSubmit={handleSubmit}>
@@ -126,7 +153,7 @@ const CreateEvent = () => {
                     />
                 </div>
                 <div>
-                    <label>Max Requests:</label>
+                    <label>Max Requests Per User:</label>
                     <input
                         type="number"
                         value={maxRequests}
@@ -134,12 +161,10 @@ const CreateEvent = () => {
                         required
                     />
                 </div>
-                <button type="submit" disabled={loading}>
-                    {loading ? 'Creating Event...' : 'Create Event'}
-                </button>
+                <button type="submit">Update Event</button>
             </form>
         </div>
     );
 };
 
-export default CreateEvent;
+export default UpdateEvent;

@@ -3,7 +3,7 @@ from datetime import datetime
 class Event:
     def __init__(self, event_id=None, event_name=None, location=None,
                 event_start=None, event_end=None, qr_code_content=None,
-                band_id=None, created_at=None, updated_at=None):
+                band_id=None, max_requests_per_user=None, created_at=None, updated_at=None):
         self.event_id = event_id
         self.event_name = event_name
         self.location = location
@@ -11,6 +11,7 @@ class Event:
         self.event_end = event_end or datetime.now()
         self.qr_code_content = qr_code_content
         self.band_id = band_id
+        self.max_requests_per_user = max_requests_per_user  # New field
         self.created_at = created_at or datetime.now()
         self.updated_at = updated_at or datetime.now()
 
@@ -25,8 +26,8 @@ class Event:
         return (f"Event(event_id={self.event_id}, event_name={self.event_name}, "
                 f"location={self.location}, event_start={self.event_start}, "
                 f"event_end={self.event_end}, qr_code_content={self.qr_code_content}, "
-                f"band_id={self.band_id}, created_at={self.created_at}, "
-                f"updated_at={self.updated_at})")
+                f"band_id={self.band_id}, max_requests_per_user={self.max_requests_per_user}, "
+                f"created_at={self.created_at}, updated_at={self.updated_at})")
 
     def to_dict(self):
         return {
@@ -37,6 +38,7 @@ class Event:
             "event_end": self.event_end.isoformat(),
             "qr_code_content": self.qr_code_content,
             "band_id": self.band_id,
+            "max_requests_per_user": self.max_requests_per_user,  # Include in the dictionary
             "created_at": self.created_at.isoformat(),
             "updated_at": self.updated_at.isoformat()
         }
