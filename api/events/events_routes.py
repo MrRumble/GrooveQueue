@@ -109,17 +109,30 @@ def update_event(event_id):
     except Exception as e:
         return jsonify(error=str(e)), 400
 
-# Route to delete an event by ID
 @event_bp.route('/events/<int:event_id>', methods=['DELETE'])
+@jwt_required()
 def delete_event(event_id):
     connection = get_flask_database_connection(current_app)
     event_repo = EventRepository(connection)
+
+    # Get the current band ID from the JWT token
+    current_band_id = get_jwt_identity()  
+
+    # Check if the event exists
+    event = event_repo.find(event_id)
+    if event is None:
+        return jsonify(error="Event not found"), 404
+    
+    # Check if the event belongs to the current band
+    if event.band_id != current_band_id:
+        return jsonify(error="You are not authorized to delete this event"), 403
 
     try:
         event_repo.delete(event_id)
         return jsonify(message="Event deleted successfully"), 200
     except Exception as e:
         return jsonify(error=str(e)), 400
+
 
 @event_bp.route('/bands/<int:band_id>/events', methods=['GET'])
 def get_events_by_band(band_id):

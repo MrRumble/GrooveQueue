@@ -55,6 +55,34 @@ const UpdateEvent = () => {
         fetchEventDetails();
     }, [eventId]);
 
+    const handleDelete = async () => {
+        const token = localStorage.getItem('access_token');
+
+        if (!token) {
+            setError("You must be logged in to delete an event.");
+            return;
+        }
+
+        try {
+            const response = await fetch(`http://localhost:5001/events/${eventId}`, {
+                method: 'DELETE',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                },
+            });
+
+            if (!response.ok) {
+                const { error } = await response.json();
+                throw new Error(error || 'Failed to delete event');
+            }
+
+            setSuccess('Event deleted successfully!');
+            navigate('/band-homepage'); // Redirect after success
+        } catch (err) {
+            setError(err.message);
+        }
+    };
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         setError(null);
@@ -163,6 +191,9 @@ const UpdateEvent = () => {
                 </div>
                 <button type="submit">Update Event</button>
             </form>
+            <button onClick={handleDelete} style={{ marginTop: '20px', color: 'white', backgroundColor: 'red' }}>
+                Delete Event
+            </button>
         </div>
     );
 };
