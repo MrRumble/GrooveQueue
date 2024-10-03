@@ -116,7 +116,7 @@ def get_events_by_band(band_id):
     try:
         band = band_repo.find(band_id)
     except ValueError:
-        return jsonify(error="Band not found"), 404  # Handle the error and return a proper response
+        return jsonify(error="Band not found"), 404  
 
     events = event_repo.find_events_by_band_id(band_id)
 
