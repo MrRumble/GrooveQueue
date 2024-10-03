@@ -24,6 +24,7 @@ def test_get_all_events(db_connection, web_client):
             "event_end": "2024-09-15T23:00:00",
             "qr_code_content": "rocking_the_city_qr_code_001",
             "band_id": 1,
+            "max_requests_per_user": 10,
             "created_at": "PLACEHOLDER",
             "updated_at": "PLACEHOLDER"
         },
@@ -35,6 +36,7 @@ def test_get_all_events(db_connection, web_client):
             "event_end": "2024-10-05T23:59:00",
             "qr_code_content": "jazz_night_qr_code_002",
             "band_id": 3,
+            "max_requests_per_user": 5,
             "created_at": "PLACEHOLDER",
             "updated_at": "PLACEHOLDER"
         },
@@ -46,6 +48,7 @@ def test_get_all_events(db_connection, web_client):
             "event_end": "2024-10-20T22:00:00",
             "qr_code_content": "big_apple_concert_qr_code_003",
             "band_id": 2,
+            "max_requests_per_user": 7,
             "created_at": "PLACEHOLDER",
             "updated_at": "PLACEHOLDER"
         },
@@ -57,6 +60,7 @@ def test_get_all_events(db_connection, web_client):
             "event_end": "2024-08-25T22:00:00",
             "qr_code_content": "summer_festival_qr_code_004",
             "band_id": 1,
+            "max_requests_per_user": 15,
             "created_at": "PLACEHOLDER",
             "updated_at": "PLACEHOLDER"
         },
@@ -68,6 +72,7 @@ def test_get_all_events(db_connection, web_client):
             "event_end": "2024-11-10T22:00:00",
             "qr_code_content": "autumn_jazz_festival_qr_code_005",
             "band_id": 3,
+            "max_requests_per_user": 3,
             "created_at": "PLACEHOLDER",
             "updated_at": "PLACEHOLDER"
         }
@@ -95,6 +100,7 @@ def test_get_event_by_id(db_connection, web_client):
         "event_end": "2024-09-15T23:00:00",
         "qr_code_content": "rocking_the_city_qr_code_001",
         "band_id": 1,
+        "max_requests_per_user": 10,
         "created_at": "PLACEHOLDER",
         "updated_at": "PLACEHOLDER"
     }
@@ -195,6 +201,7 @@ def test_get_events_by_band_id(db_connection, web_client):
                 "event_end": "2024-09-15T23:00:00",
                 "qr_code_content": "rocking_the_city_qr_code_001",
                 "band_id": 1,
+                "max_requests_per_user": 10,
                 "created_at": "PLACEHOLDER",  # Adjust this as necessary
                 "updated_at": "PLACEHOLDER"   # Adjust this as necessary
             },
@@ -206,6 +213,7 @@ def test_get_events_by_band_id(db_connection, web_client):
                 "event_end": "2024-08-25T22:00:00",
                 "qr_code_content": "summer_festival_qr_code_004",
                 "band_id": 1,
+                "max_requests_per_user": 15,
                 "created_at": "PLACEHOLDER",  # Adjust this as necessary
                 "updated_at": "PLACEHOLDER"   # Adjust this as necessary
             }

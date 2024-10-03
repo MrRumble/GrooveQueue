@@ -11,9 +11,10 @@ def test_initialisation():
     assert isinstance(event.event_end, datetime)
     assert event.qr_code_content is None
     assert event.band_id is None
+    assert event.max_requests_per_user is None
     assert isinstance(event.created_at, datetime)
     assert isinstance(event.updated_at, datetime)
-    print("test_initialization passed")
+    print("test_initialisation passed")
 
 def test_initialisation_with_values():
     # Test initialisation with arguments
@@ -21,6 +22,7 @@ def test_initialisation_with_values():
                   event_start=datetime(2023, 9, 10, 15, 0, 0), 
                   event_end=datetime(2023, 9, 10, 18, 0, 0),
                   qr_code_content="some_qr_code_data", band_id=2,
+                  max_requests_per_user=5,  # Set max requests explicitly
                   created_at=datetime(2023, 8, 1),
                   updated_at=datetime(2023, 8, 2))
 
@@ -31,14 +33,15 @@ def test_initialisation_with_values():
     assert event.event_end == datetime(2023, 9, 10, 18, 0, 0)
     assert event.qr_code_content == "some_qr_code_data"
     assert event.band_id == 2
+    assert event.max_requests_per_user == 5  # Check max requests
     assert event.created_at == datetime(2023, 8, 1)
     assert event.updated_at == datetime(2023, 8, 2)
 
 def test_equality():
     # Test equality comparison
-    event1 = Event(event_id=1, event_name="Jazz Festival", location="Central Park")
-    event2 = Event(event_id=1, event_name="Jazz Festival", location="Central Park")
-    event3 = Event(event_id=2, event_name="Rock Concert", location="Madison Square Garden")
+    event1 = Event(event_id=1, event_name="Jazz Festival", location="Central Park", max_requests_per_user=5)
+    event2 = Event(event_id=1, event_name="Jazz Festival", location="Central Park", max_requests_per_user=5)
+    event3 = Event(event_id=2, event_name="Rock Concert", location="Madison Square Garden", max_requests_per_user=3)
 
     assert event1 == event2
     assert event1 != event3
@@ -49,12 +52,13 @@ def test_representation():
                   event_start=datetime(2023, 9, 10, 15, 0, 0), 
                   event_end=datetime(2023, 9, 10, 18, 0, 0),
                   qr_code_content="some_qr_code_data", band_id=2,
+                  max_requests_per_user=5,  # Include max requests in representation
                   created_at=datetime(2023, 8, 1),
                   updated_at=datetime(2023, 8, 2))
     
     expected_repr = ("Event(event_id=1, event_name=Jazz Festival, location=Central Park, "
                      "event_start=2023-09-10 15:00:00, event_end=2023-09-10 18:00:00, "
-                     "qr_code_content=some_qr_code_data, band_id=2, "
+                     "qr_code_content=some_qr_code_data, band_id=2, max_requests_per_user=5, "  # Update repr
                      "created_at=2023-08-01 00:00:00, "
                      "updated_at=2023-08-02 00:00:00)")
     
@@ -66,6 +70,7 @@ def test_to_dict():
                   event_start=datetime(2023, 9, 10, 15, 0, 0), 
                   event_end=datetime(2023, 9, 10, 18, 0, 0),
                   qr_code_content="some_qr_code_data", band_id=2,
+                  max_requests_per_user=5,  # Add max requests in to_dict
                   created_at=datetime(2023, 8, 1),
                   updated_at=datetime(2023, 8, 2))
 
@@ -78,6 +83,7 @@ def test_to_dict():
         "event_end": "2023-09-10T18:00:00",
         "qr_code_content": "some_qr_code_data",
         "band_id": 2,
+        "max_requests_per_user": 5,  # Include max requests in dictionary
         "created_at": "2023-08-01T00:00:00",
         "updated_at": "2023-08-02T00:00:00"
     }
