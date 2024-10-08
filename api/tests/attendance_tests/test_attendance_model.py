@@ -1,5 +1,5 @@
 from datetime import datetime
-from api.attendences.attendence_model import Attendance  # Adjust the import based on the actual path
+from api.attendances.attendance_model import Attendance  # Adjust the import based on the actual path
 
 def test_initialisation():
     # Test initialization with no arguments
