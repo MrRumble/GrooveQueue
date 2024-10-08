@@ -55,3 +55,4 @@ The Wedding Band Song Request App is designed to enhance the live event experien
 ## Conclusion
 
 The Wedding Band Song Request App aims to revolutionise the live event experience by integrating technology to facilitate song requests and improve guest interaction. By allowing guests to request songs via QR codes and providing bands with efficient management tools and secure OAuth2 authentication, the app enhances the overall enjoyment and security of live events.
+
