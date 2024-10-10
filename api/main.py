@@ -6,6 +6,7 @@ from api.guests.guest_routes import guest_bp
 from api.bands.band_route import band_bp
 from api.events.events_routes import event_bp
 from api.requests.request_routes import request_bp
+from api.attendances.attendance_routes import attendace_bp
 
 import os
 
@@ -24,6 +25,7 @@ app.register_blueprint(guest_bp)
 app.register_blueprint(band_bp)
 app.register_blueprint(event_bp)
 app.register_blueprint(request_bp)
+app.register_blueprint(attendace_bp)
 
 # Initialize CORS
 CORS(app)
