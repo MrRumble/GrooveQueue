@@ -29,6 +29,10 @@ def post_attendance():
     try:
         connection = get_flask_database_connection(current_app)
         attendance_repo = AttendanceRepository(connection)
+        # Check if attendance already exists
+        if attendance_repo.check_attendance_exists(guest_id, event_id):
+            return jsonify(error="Attendance request already exists for this event"), 409
+        
         created_attendance = attendance_repo.create_attendance(guest_id=guest_id, event_id=event_id, status=status)
         return jsonify(attendance=created_attendance.to_dict()), 201
     except Exception as e:

@@ -112,7 +112,6 @@ def test_update_attendance(db_connection):
     assert updated_attendance.attendance_id == attendance_to_update.attendance_id
     assert updated_attendance.status == 'declined'
 
-
 def test_delete_attendance(db_connection):
     # Seed the database
     seed_database(db_connection)
@@ -143,3 +142,22 @@ def test_attendance_exists(db_connection):
 
     false_result = attendance_repo.get_attendance_by_guest(999)  # Non-existent guest_id
     assert len(false_result) == 0  # Should return an empty list
+
+def test_check_attendance_exists(db_connection):
+    # Seed the database
+    seed_database(db_connection)
+
+    # Create an instance of AttendanceRepository
+    attendance_repo = AttendanceRepository(db_connection)
+
+    # Test for an existing attendance
+    exists = attendance_repo.check_attendance_exists(1, 1)  # Assuming guest_id 1 has an attendance for event_id 1
+    assert exists is True  # Expect True since this attendance should exist
+
+    # Test for a non-existing attendance
+    not_exists = attendance_repo.check_attendance_exists(1, 999)  # Assuming no event with ID 999
+    assert not_exists is False  # Expect False since this attendance should not exist
+
+    # Test for another non-existing attendance
+    not_exists = attendance_repo.check_attendance_exists(999, 1)  # Assuming guest_id 999 does not exist
+    assert not_exists is False  # Expect False since this guest should not exist
