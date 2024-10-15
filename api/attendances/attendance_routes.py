@@ -16,6 +16,7 @@ Change create_attendance to take Attendence object as parameter.
 @jwt_required()
 def post_attendance():
     data = request.json
+    print(data)
 
     # Validate the input data
     if not data or not all(key in data for key in ['guest_id', 'event_id', 'status']):
@@ -26,8 +27,9 @@ def post_attendance():
     status = data.get('status')
 
     try:
-        attendance_repo = AttendanceRepository()
+        connection = get_flask_database_connection(current_app)
+        attendance_repo = AttendanceRepository(connection)
         created_attendance = attendance_repo.create_attendance(guest_id=guest_id, event_id=event_id, status=status)
-        return jsonify(attendance=created_attendance), 201
+        return jsonify(attendance=created_attendance.to_dict()), 201
     except Exception as e:
         return jsonify(error=str(e)), 400
