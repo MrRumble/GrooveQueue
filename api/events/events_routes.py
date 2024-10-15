@@ -61,8 +61,6 @@ def create_event():
         created_at=data.get('created_at'),
         updated_at=data.get('updated_at')
     )
-    print(event)
-
     try:
         created_event_id = create_new_event(event)
         return jsonify(event_id=created_event_id), 201

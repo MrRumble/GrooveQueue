@@ -61,3 +61,8 @@ class AttendanceRepository:
         query = "DELETE FROM attendance WHERE attendance_id = %s"
         self._connection.execute(query, [attendance_id])
         return None
+    
+    def check_attendance_exists(self, guest_id, event_id):
+        query = "SELECT * FROM attendance WHERE guest_id = %s AND event_id = %s"
+        rows = self._connection.execute(query, [guest_id, event_id])
+        return len(rows) > 0
