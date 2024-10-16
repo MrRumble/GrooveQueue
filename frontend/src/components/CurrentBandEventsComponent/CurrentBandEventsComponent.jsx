@@ -49,6 +49,12 @@ const CurrentBandEvents = () => {
         navigate(`/update-event/${eventId}`); // Navigate to update event route with event ID
     };
 
+    // Function to handle navigation to the attendees component
+    const handleViewAttendees = (eventId) => {
+        console.log('Navigating to view attendees for event:', eventId); // Debug log
+        navigate(`/event-attendees/${eventId}`); // Navigate to attendees route with event ID
+    };
+
     return (
         <div>
             <Navbar /> {/* Include the Navbar component */}
@@ -57,13 +63,14 @@ const CurrentBandEvents = () => {
                 {events.length > 0 ? (
                     <ul>
                         {events.map(event => (
-                            <li key={event.id} className="event-item">
+                            <li key={event.event_id} className="event-item">
                                 <h2>{event.event_name}</h2>
                                 <p><strong>Location:</strong> {event.location}</p>
                                 <p><strong>Start:</strong> {new Date(event.event_start).toLocaleString()}</p>
                                 <p><strong>End:</strong> {new Date(event.event_end).toLocaleString()}</p>
                                 <p><strong>QR Code:</strong> {event.qr_code_content}</p>
                                 <button onClick={() => handleUpdateEvent(event.event_id)}>Update Event</button> {/* Update Event Button */}
+                                <button onClick={() => handleViewAttendees(event.event_id)}>View Attendees</button> {/* View Attendees Button */}
                             </li>
                         ))}
                     </ul>
