@@ -85,3 +85,14 @@ class RequestRepository:
             )
             requests.append(request)
         return requests
+    
+    def requests_by_guest(self, guest_id, event_id):
+        query = """
+            SELECT COUNT(*) as request_count
+            FROM requests
+            WHERE guest_id = %s AND event_id = %s
+        """
+        result = self._connection.execute(query, [guest_id, event_id])
+        return result[0]['request_count'] if result else 0
+
+

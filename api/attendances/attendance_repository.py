@@ -34,11 +34,6 @@ class AttendanceRepository:
         rows = self._connection.execute(query, [guest_id])
         return [Attendance(**row) for row in rows]
 
-    def get_attendance_by_event(self, event_id):
-        query = "SELECT * FROM attendance WHERE event_id = %s"
-        rows = self._connection.execute(query, [event_id])
-        return [Attendance(**row) for row in rows]
-
     def update_attendance(self, attendance_id, status):
         query = """
             UPDATE attendance
@@ -66,3 +61,28 @@ class AttendanceRepository:
         query = "SELECT * FROM attendance WHERE guest_id = %s AND event_id = %s"
         rows = self._connection.execute(query, [guest_id, event_id])
         return len(rows) > 0
+
+    def get_attendance_with_guest_details(self, event_id):
+        query = """
+            SELECT a.attendance_id, a.guest_id, a.event_id, a.status, a.created_at, a.updated_at, 
+                g.name AS guest_name, g.email AS guest_email
+            FROM attendance a
+            JOIN guests g ON a.guest_id = g.id
+            WHERE a.event_id = %s
+        """
+        rows = self._connection.execute(query, [event_id])
+        print("Rows fetched:", rows) 
+        # Create a list of dictionaries containing both attendance and guest details
+        return [
+            {
+                'attendance_id': row['attendance_id'],
+                'guest_id': row['guest_id'],
+                'event_id': row['event_id'],
+                'status': row['status'],
+                'created_at': row['created_at'],
+                'updated_at': row['updated_at'],
+                'guest_name': row['guest_name'],
+                'guest_email': row['guest_email']
+            }
+            for row in rows
+        ]

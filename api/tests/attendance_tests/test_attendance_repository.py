@@ -54,32 +54,6 @@ def test_get_attendance_by_guest(db_connection):
         assert result.event_id == expected.event_id
         assert result.status == expected.status
 
-def test_get_attendance_by_event(db_connection):
-    # Seed the database
-    seed_database(db_connection)
-
-    # Create an instance of AttendanceRepository
-    attendance_repo = AttendanceRepository(db_connection)
-
-    # Get attendance records for event_id 1
-    attendances = attendance_repo.get_attendance_by_event(1)
-
-    expected_attendances = [
-        Attendance(attendance_id=1, guest_id=1, event_id=1, status='accepted', created_at=None, updated_at=None),
-        Attendance(attendance_id=2, guest_id=2, event_id=1, status='declined', created_at=None, updated_at=None),
-        Attendance(attendance_id=7, guest_id=7, event_id=1, status='accepted', created_at=None, updated_at=None)
-    ]
-
-    # Check if the number of results is as expected
-    assert len(attendances) == len(expected_attendances)
-
-    # Compare individual attributes
-    for result, expected in zip(attendances, expected_attendances):
-        assert result.attendance_id == expected.attendance_id
-        assert result.guest_id == expected.guest_id
-        assert result.event_id == expected.event_id
-        assert result.status == expected.status
-
 def test_update_attendance(db_connection):
     # Seed the database
     seed_database(db_connection)

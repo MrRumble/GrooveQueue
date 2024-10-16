@@ -15,6 +15,7 @@ import BandEvents from './components/BandEventsComponent/BandEventsComponent';
 import CreateRequestForm from './components/CreateRequestComponent/CreateRequestComponent';
 import AllEvents from './components/AllEventsComponent/AllEvents';
 import UpdateEvent from './components/UpdateEventComponent/UpdateEventComponent';
+import EventAttendees from './components/EventAttendeesComponent/EventAtendeesComponent';
 
 const App = () => {
     return (
@@ -34,6 +35,7 @@ const App = () => {
                 <Route path="/bands/:bandId/events" element={<BandEvents />} />
                 <Route path="/events" element={<AllEvents />} />
                 <Route path="/events/:eventId/requests" element={<CreateRequestForm />} />
+                <Route path="/event-attendees/:eventId" element={<EventAttendees />} />
                 
             </Routes>
         </Router>
