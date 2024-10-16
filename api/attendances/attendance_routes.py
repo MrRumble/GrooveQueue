@@ -16,7 +16,6 @@ Change create_attendance to take Attendence object as parameter.
 @jwt_required()
 def post_attendance():
     data = request.json
-    print(data)
 
     # Validate the input data
     if not data or not all(key in data for key in ['guest_id', 'event_id', 'status']):
@@ -37,3 +36,9 @@ def post_attendance():
         return jsonify(attendance=created_attendance.to_dict()), 201
     except Exception as e:
         return jsonify(error=str(e)), 400
+    
+
+
+# TODO Create a view all attendence for an event by guest, update guests attendece per event
+        # only allow guests who have been approved to an event to send requests.
+        # MAX REQUESTS PER USER ISNT WORKING!

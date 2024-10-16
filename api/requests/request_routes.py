@@ -26,11 +26,18 @@ def create_request(event_id):
     event_repo = EventRepository(connection)
 
     data = request.get_json()
-    
+
     # Check if the event exists
     event = event_repo.find(event_id)
     if not event:
         return jsonify(error="Invalid event ID: event not found"), 400
+
+    max_requests = event.max_requests_per_user
+
+    # Check if guest has reached the max requests limit for the event
+    guests_requests_count = request_repo.requests_by_guest(data['guest_id'], event_id)
+    if guests_requests_count >= max_requests:
+        return jsonify(error="You have reached the maximum number of requests for this event."), 400
 
     # Validate input fields
     if not data or not all(key in data for key in ['song_name', 'guest_id']):
@@ -49,8 +56,8 @@ def create_request(event_id):
     )
 
     new_request_id = request_repo.create(new_request)
-
     return jsonify({"request_id": new_request_id}), 201
+
 
 @request_bp.route('/requests/<int:request_id>', methods=['PUT'])
 def update_request(request_id):

@@ -284,3 +284,46 @@ def test_find_requests_by_event_id(db_connection):
     # Test finding requests for event_id 4
     result_event_4 = request_repo.find_requests_by_event_id(4)
     assert result_event_4 == expected_requests_event_4
+
+def test_requests_by_guest(db_connection):
+    # Seed the database with test data
+    db_connection.seed("../seeds/requests_table_test_data.sql")
+    
+    # Create an instance of RequestRepository
+    request_repo = RequestRepository(db_connection)
+    
+    # Test guest 1 for event 1 (should return 1 request)
+    guest_1_event_1_count = request_repo.requests_by_guest(1, 1)
+    assert guest_1_event_1_count == 1  # In the seed data, guest 1 has made 1 request for event 1
+    
+    # Test guest 2 for event 1 (should return 1 request)
+    guest_2_event_1_count = request_repo.requests_by_guest(2, 1)
+    assert guest_2_event_1_count == 1  # Guest 2 made 1 request for event 1
+    
+    # Test guest 3 for event 2 (should return 1 request)
+    guest_3_event_2_count = request_repo.requests_by_guest(3, 2)
+    assert guest_3_event_2_count == 1  # Guest 3 made 1 request for event 2
+
+    # Test guest 1 for event 2 (should return 0 requests)
+    guest_1_event_2_count = request_repo.requests_by_guest(1, 2)
+    assert guest_1_event_2_count == 0  # Guest 1 made no requests for event 2
+
+    # Test guest 8 for event 4 (should return 1 request)
+    guest_8_event_4_count = request_repo.requests_by_guest(8, 4)
+    assert guest_8_event_4_count == 1  # Guest 8 made 1 request for event 4
+
+    # Test guest 9 for event 5 (should return 1 request)
+    guest_9_event_5_count = request_repo.requests_by_guest(9, 5)
+    assert guest_9_event_5_count == 1  # Guest 9 made 1 request for event 5
+
+    # Test guest 10 for event 5 (should return 1 request)
+    guest_10_event_5_count = request_repo.requests_by_guest(10, 5)
+    assert guest_10_event_5_count == 1  # Guest 10 made 1 request for event 5
+
+    # Test a guest with no requests at all
+    guest_11_no_requests = request_repo.requests_by_guest(11, 1)
+    assert guest_11_no_requests == 0  # Guest 11 made no requests at any event
+
+    # Test a guest for an event that doesn't exist (should return 0 requests)
+    guest_1_event_non_existent = request_repo.requests_by_guest(1, 9999)
+    assert guest_1_event_non_existent == 0  # Event 9999 doesn't exist, so no requests
