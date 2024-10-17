@@ -7,6 +7,7 @@ from api.bands.band_route import band_bp
 from api.events.events_routes import event_bp
 from api.requests.request_routes import request_bp
 from api.attendances.attendance_routes import attendance_bp
+from api.notifications.notification_routes import notifications_bp
 
 import os
 
@@ -26,6 +27,7 @@ app.register_blueprint(band_bp)
 app.register_blueprint(event_bp)
 app.register_blueprint(request_bp)
 app.register_blueprint(attendance_bp)
+app.register_blueprint(notifications_bp)
 
 # Initialize CORS
 CORS(app)

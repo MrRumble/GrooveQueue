@@ -45,8 +45,8 @@ def post_attendance():
         guest = guest_repo.find(guest_id)
         event = event_repo.find(event_id)
         notification = Notification(
-                recipient_id=guest_id,
-                recipient_type='guest',
+                recipient_id=event.band_id,
+                recipient_type='band',
                 event_id=event_id,
                 notification_type='attendance_request',
                 message = f'Guest {guest.name} has requested to attend your show: {event.event_name}.',
