@@ -76,8 +76,10 @@ def login_band():
     if not band or not check_password_hash(band.password, password):
         return jsonify(error="Invalid email or password"), 401
 
-
-    access_token = create_access_token(identity=band.band_id, expires_delta=timedelta(minutes=30))
+    access_token = create_access_token(
+        identity=band.band_id,
+        expires_delta=timedelta(minutes=30),
+        additional_claims={"role": "band"})
     return jsonify(access_token=access_token, email=band.band_email, band_id=band.band_id, band_name=band.band_name), 200
 
 @band_bp.route('/band/current', methods=['GET'])

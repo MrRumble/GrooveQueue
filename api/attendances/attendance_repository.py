@@ -86,3 +86,44 @@ class AttendanceRepository:
             }
             for row in rows
         ]
+    
+    def is_attending_event(self, guest_id, event_id):
+            """
+            Check if a guest is attending a specific event.
+            
+            Args:
+                guest_id (int): The ID of the guest.
+                event_id (int): The ID of the event.
+
+            Returns:
+                bool: True if the guest is attending, False otherwise.
+            """
+            query = """
+                SELECT status FROM attendance 
+                WHERE guest_id = %s AND event_id = %s
+            """
+            rows = self._connection.execute(query, [guest_id, event_id])
+            
+            if not rows:
+                return False  # No record found, so the guest is not attending
+
+            # Check if the status indicates attendance
+            return rows[0]['status'] == 'attending'
+    
+    def update_attendance_status(self, attendance_id, new_status):
+        query = """
+            UPDATE attendance
+            SET status = %s,
+                updated_at = %s
+            WHERE attendance_id = %s
+            RETURNING attendance_id, guest_id, event_id, status, created_at, updated_at
+        """
+        params = (
+            new_status,
+            datetime.datetime.now(),
+            attendance_id
+        )
+        result = self._connection.execute(query, params)
+        if not result:
+            raise ValueError("Attendance record not found")
+        return Attendance(**result[0])

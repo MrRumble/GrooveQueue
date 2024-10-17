@@ -36,6 +36,58 @@ const EventAttendees = () => {
         fetchAttendees(); // Call the function to fetch attendees
     }, [eventId]); // Dependency on eventId ensures it fetches new data if the eventId changes
 
+    // Function to accept an attendee
+    const acceptAttendee = async (attendanceId) => {
+        try {
+            const response = await fetch(`http://localhost:5001/events/${eventId}/attendees/${attendanceId}/accept`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${localStorage.getItem('access_token')}`, // Assuming token is stored in localStorage
+                },
+            });
+
+            if (!response.ok) {
+                throw new Error('Failed to accept attendee');
+            }
+
+            // Update the state to reflect the accepted status
+            setAttendees(prevAttendees =>
+                prevAttendees.map(attendee =>
+                    attendee.attendance_id === attendanceId ? { ...attendee, status: 'accepted' } : attendee
+                )
+            );
+        } catch (err) {
+            setError(err.message);
+        }
+    };
+
+    // Function to reject an attendee
+    const rejectAttendee = async (attendanceId) => {
+        try {
+            const response = await fetch(`http://localhost:5001/events/${eventId}/attendees/${attendanceId}/reject`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${localStorage.getItem('access_token')}`, // Assuming token is stored in localStorage
+                },
+            });
+
+            if (!response.ok) {
+                throw new Error('Failed to reject attendee');
+            }
+
+            // Update the state to reflect the rejected status
+            setAttendees(prevAttendees =>
+                prevAttendees.map(attendee =>
+                    attendee.attendance_id === attendanceId ? { ...attendee, status: 'rejected' } : attendee
+                )
+            );
+        } catch (err) {
+            setError(err.message);
+        }
+    };
+
     // Render loading state
     if (loading) return <div>Loading attendees...</div>;
     
@@ -57,6 +109,8 @@ const EventAttendees = () => {
                                 <p><strong>Status:</strong> {attendee.status}</p>
                                 <p><strong>Created At:</strong> {new Date(attendee.created_at).toLocaleString()}</p>
                                 <p><strong>Updated At:</strong> {new Date(attendee.updated_at).toLocaleString()}</p>
+                                <button onClick={() => acceptAttendee(attendee.attendance_id)}>Accept</button>
+                                <button onClick={() => rejectAttendee(attendee.attendance_id)}>Reject</button>
                             </li>
                         ))}
                     </ul>

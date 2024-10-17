@@ -16,6 +16,7 @@ import CreateRequestForm from './components/CreateRequestComponent/CreateRequest
 import AllEvents from './components/AllEventsComponent/AllEvents';
 import UpdateEvent from './components/UpdateEventComponent/UpdateEventComponent';
 import EventAttendees from './components/EventAttendeesComponent/EventAtendeesComponent';
+import NotificationsPage from './pages/NotificationsPage/NotificationsPage';
 
 const App = () => {
     return (
@@ -36,6 +37,7 @@ const App = () => {
                 <Route path="/events" element={<AllEvents />} />
                 <Route path="/events/:eventId/requests" element={<CreateRequestForm />} />
                 <Route path="/event-attendees/:eventId" element={<EventAttendees />} />
+                <Route path="/notifications" element={<NotificationsPage />} />
                 
             </Routes>
         </Router>

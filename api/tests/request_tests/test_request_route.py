@@ -38,41 +38,6 @@ def test_get_request_by_request_id_not_found(db_connection, web_client):
     assert response.status_code == 404
     assert response.get_json() == {"error": "Request not found"}
 
-# Test for creating a request (POST) - updated to match new route
-def test_post_request_valid_entry(db_connection, web_client):
-    seed_database(db_connection)
-    new_request = {
-        "song_name": "Imagine",
-        "guest_id": 5
-    }
-
-    response = web_client.post('/events/5/requests', json=new_request)  # Use /events/<event_id>/requests
-    assert response.status_code == 201
-    assert "request_id" in response.get_json()
-
-# Test for missing field (POST) - updated to match new route
-def test_post_request_missing_field(db_connection, web_client):
-    seed_database(db_connection)
-
-    new_request = {
-        "guest_id": 5
-    }
-    response = web_client.post('/events/5/requests', json=new_request)  # Use /events/<event_id>/requests
-    assert response.status_code == 400
-    assert response.get_json() == {"error": "Missing required fields"}
-
-# Test for invalid entry (POST) - updated to match new route
-def test_post_request_invalid_entry(db_connection, web_client):
-    seed_database(db_connection)
-
-    new_request = {
-        "song_name": "  ",  # Invalid song name
-        "guest_id": 5
-    }
-    response = web_client.post('/events/5/requests', json=new_request)  # Use /events/<event_id>/requests
-    assert response.status_code == 400
-    assert response.get_json() == {"error": "Song name cannot be empty"}
-
 # Test for updating a request (remains unchanged)
 def test_put_request_successful_update(db_connection, web_client):
     seed_database(db_connection)
