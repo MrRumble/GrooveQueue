@@ -1,0 +1,67 @@
+.signup-selection-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    min-height: 100vh;
+    text-align: center;
+}
+
+
+.signup-header {
+    font-size: 2.5em; /* Adjusted size for consistency */
+    color: #AC3B61; /* Specific color for header */
+    margin-bottom: 20px;
+}
+
+.signup-paragraph {
+    font-size: 1.2em; /* Font size for paragraphs */
+
+    margin-bottom: 40px;
+}
+
+.info-boxes {
+    display: flex;
+    justify-content: space-around;
+    width: 100%;
+    max-width: 1000px; /* Adjusted for better layout */
+    flex-wrap: wrap; /* Allows wrapping on smaller screens */
+    gap: 20px; /* Space between boxes */
+}
+
+.info-box {
+    background-color: #EEE2DC;
+    border-radius: 10px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    width: 45%;
+    text-align: center;
+}
+
+.info-box-header {
+    font-size: 1.8em; /* Font size for info box header */
+    color: #AC3B61; /* Specific color for box headers */
+    margin-bottom: 15px;
+}
+
+.info-box-paragraph {
+    list-style-type: none;
+    font-size: 1.1em; /* Font size for box paragraphs */
+    margin-bottom: 20px;
+    text-align: left;
+}
+
+.signup-button {
+    background-color: #123c69;
+    color: #EEE2DC;
+    padding: 10px 20px;
+    border-radius: 5px;
+    text-decoration: none;
+    font-size: 1.1em;
+    transition: background-color 0.3s;
+}
+
+.signup-button:hover {
+    background-color: #1962af;
+}

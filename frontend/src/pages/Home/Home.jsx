@@ -1,26 +1,29 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import Navbar from '../../components/Navbar/Navbar';
+import './Home.css';
 
 const Home = () => {
-return (
+  return (
     <div className="home-container">
-        <Navbar />
-        <header className="header">
-            <h1>Welcome to GrooveQueue</h1>
-            <p>Your ultimate event management and guest interaction platform.</p>
-        </header>
+      <Navbar />
+      <header className="header">
+        <h1>
+          {Array.from('GROOVEQUEUE').map((letter, index) => (
+            <span key={index}>{letter}</span>
+          ))}
+        </h1>
+        <p>Your ultimate event management and guest interaction platform.</p>
+      </header>
 
-    <div className="content">
+      <div className="content">
         <p>
-        Manage events, connect with your guests, and create an unforgettable experience with GrooveQueue.
+          Manage events, connect with your guests, and create an unforgettable experience with GrooveQueue.
         </p>
-        <Link to="/signupguest" className="signup-link">
-        Sign Up as Guest
-        </Link>
+        <Link to="/signup" className="signup-now-button">Sign Up Now</Link>
+      </div>
     </div>
-    </div>
-    );
-}
+  );
+};
 
 export default Home;
