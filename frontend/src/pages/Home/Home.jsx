@@ -2,6 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import Navbar from '../../components/Navbar/Navbar';
 import './Home.css';
+import GrooveQueueLogo from "../../assets/GrooveQueueLogo.png"; // Ensure the import name is correct
 
 const Home = () => {
   return (
@@ -17,6 +18,7 @@ const Home = () => {
       </header>
 
       <div className="content">
+        <img src={GrooveQueueLogo} alt="GrooveQueue Icon" className="logo-icon" />
         <p>
           Manage events, connect with your guests, and create an unforgettable experience with GrooveQueue.
         </p>

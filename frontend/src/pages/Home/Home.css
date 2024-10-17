@@ -21,6 +21,8 @@ h1 {
     margin: 0;
     letter-spacing: 0.30em; /* Adds space between the letters */
     transition: all 0.3s ease; /* Smooth transition for hover effect */
+    position: relative; /* Ensure the header is positioned relative to parent */
+    z-index: 1; /* Ensure it appears above the icon */
 }
 
 h1:hover span {
@@ -35,6 +37,7 @@ h1 span {
 h1:hover span:hover {
     transform: scale(1.5); /* Enlarges the letter on hover */
 }
+
 p {
     font-size: 1.2em; /* Font size for paragraphs */
 }
@@ -62,8 +65,21 @@ p {
     text-decoration: none; /* Remove underline */
     font-size: 1.2em; /* Font size for the button */
     transition: background-color 0.3s; /* Smooth transition for hover */
-  }
-  
-  .signup-now-button:hover {
+}
+
+.signup-now-button:hover {
     background-color: #e45081; /* Darker shade on hover */
-  }
+}
+
+.logo-container {
+    position: relative; /* Positioning for child elements */
+    display: inline-block; /* Allows the text to overlay the icon */
+}
+
+.logo-icon {
+    display: block; /* Center the image */
+    margin: 20px auto; /* Add margin for spacing above and below */
+    width: 150px; /* Adjust the size of the icon */
+    height: auto; /* Maintain aspect ratio */
+    opacity: 0.7; /* Make it slightly transparent */
+}
