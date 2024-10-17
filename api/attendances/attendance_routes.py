@@ -1,7 +1,9 @@
 from flask import Blueprint, request, jsonify, current_app
 from api.attendances.attendance_repository import AttendanceRepository
-from api.attendances.attendance_model import Attendance
+from api.notifications.notification_model import Notification
 from api.events.event_repository import EventRepository
+from api.guests.guest_repository import GuestRepository
+from api.notifications.notification_repository import NotificationRepository
 from api.events.event_create import create_event as create_new_event
 from api.common.db import get_flask_database_connection
 from flask_jwt_extended import jwt_required, get_jwt_identity
@@ -17,7 +19,6 @@ Change create_attendance to take Attendence object as parameter.
 @jwt_required()
 def post_attendance():
     data = request.json
-
     # Validate the input data
     if not data or not all(key in data for key in ['guest_id', 'event_id', 'status']):
         return jsonify(error="Missing required fields"), 400
@@ -34,6 +35,24 @@ def post_attendance():
             return jsonify(error="Attendance request already exists for this event"), 409
         
         created_attendance = attendance_repo.create_attendance(guest_id=guest_id, event_id=event_id, status=status)
+        
+        # Create an attendance request notification
+        notification_repo = NotificationRepository(connection)
+
+        event_repo = EventRepository(connection)
+        guest_repo= GuestRepository(connection)
+
+        guest = guest_repo.find(guest_id)
+        event = event_repo.find(event_id)
+        notification = Notification(
+                recipient_id=guest_id,
+                recipient_type='guest',
+                event_id=event_id,
+                notification_type='attendance_request',
+                message = f'Guest {guest.name} has requested to attend your show: {event.event_name}.',
+                )
+        
+        notification_repo.create(notification)
         return jsonify(attendance=created_attendance.to_dict()), 201
     except Exception as e:
         return jsonify(error=str(e)), 400

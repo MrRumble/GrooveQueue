@@ -66,3 +66,14 @@ class NotificationRepository:
         """
         rows = self._connection.execute(query, [recipient_id, recipient_type])
         return [Notification(**row) for row in rows]
+
+    def update_is_read(self, notification_id, is_read):
+        """Update the read status of a notification."""
+        query = """
+            UPDATE notifications
+            SET is_read = %s, updated_at = %s
+            WHERE notification_id = %s
+        """
+        params = (is_read, datetime.datetime.now(), notification_id)
+        self._connection.execute(query, params)
+        return None
