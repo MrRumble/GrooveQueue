@@ -46,11 +46,22 @@ const CreateRequestForm = () => {
     }
 
     try {
-      // Make a POST request to create the new request
-      const response = await axios.post(`http://localhost:5001/events/${eventId}/requests`, {
-        song_name: songName,
-        guest_id: userId,
-      });
+      // Prepare the token for authorization
+      const token = localStorage.getItem('access_token');
+
+      // Make a POST request to create the new request with authorization header
+      const response = await axios.post(
+        `http://localhost:5001/events/${eventId}/requests`,
+        {
+          song_name: songName,
+          guest_id: userId,
+        },
+        {
+          headers: {
+            'Authorization': `Bearer ${token}`, // Include the token in the Authorization header
+          },
+        }
+      );
 
       setSuccessMessage(`Request created successfully! Request ID: ${response.data.request_id}`);
       setSongName(''); // Clear form after successful submission

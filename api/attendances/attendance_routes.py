@@ -35,7 +35,7 @@ def post_attendance():
             return jsonify(error="Attendance request already exists for this event"), 409
         
         created_attendance = attendance_repo.create_attendance(guest_id=guest_id, event_id=event_id, status=status)
-        
+
         # Create an attendance request notification
         notification_repo = NotificationRepository(connection)
 
