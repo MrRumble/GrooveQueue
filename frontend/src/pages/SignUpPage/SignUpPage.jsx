@@ -2,12 +2,17 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import './SignUpPage.css';
 import Navbar from '../../components/Navbar/Navbar';
+import grooveQueueLogo from '../../assets/GrooveQueueLogo.png'; // Adjust the path as needed
 
 const SignupPage = () => {
   return (
     <div className="signup-selection-container">
       <Navbar />
       <h1 className="signup-header">Choose Your Account Type</h1>
+      
+      {/* Include the GrooveQueue logo here */}
+      <img src={grooveQueueLogo} alt="GrooveQueue Logo" className="groovequeue-logo" />
+
       <p className="signup-paragraph">Are you signing up as a guest or a band?</p>
 
       <div className="info-boxes">

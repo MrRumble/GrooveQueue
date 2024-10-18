@@ -11,11 +11,11 @@
     margin-top: 60px; /* Space for the fixed navbar */
 }
 
-.header {
+.home-header {
     margin-bottom: 30px; /* Space below the header */
 }
 
-h1 {
+.home-header h1 {
     font-size: 2.5em;
     color: #ac3b61;
     margin: 0;
@@ -25,29 +25,29 @@ h1 {
     z-index: 1; /* Ensure it appears above the icon */
 }
 
-h1:hover span {
+.home-header h1:hover span {
     font-size: 1.3em; /* Increases font size when hovered */
 }
 
-h1 span {
+.home-header h1 span {
     display: inline-block;
     transition: transform 0.3s ease, font-size 0.3s ease; /* Smooth transition for each letter */
 }
 
-h1:hover span:hover {
+.home-header h1:hover span:hover {
     transform: scale(1.5); /* Enlarges the letter on hover */
 }
 
-p {
+.home-content p {
     font-size: 1.2em; /* Font size for paragraphs */
 }
 
-.content {
+.home-content {
     max-width: 600px; /* Limit content width */
 }
 
 /* Styles for Navbar */
-.navbar {
+.home-navbar {
     position: fixed; /* Keep Navbar fixed at the top */
     top: 0;
     left: 0;
@@ -55,7 +55,7 @@ p {
     z-index: 1000; /* Ensure it stays above other content */
 }
 
-.signup-now-button {
+.home-signup-now-button {
     display: inline-block; /* Make it behave like a button */
     margin-top: 20px; /* Space above the button */
     padding: 10px 20px; /* Padding for the button */
@@ -67,19 +67,26 @@ p {
     transition: background-color 0.3s; /* Smooth transition for hover */
 }
 
-.signup-now-button:hover {
+.home-signup-now-button:hover {
     background-color: #e45081; /* Darker shade on hover */
 }
 
-.logo-container {
+.home-logo-container {
     position: relative; /* Positioning for child elements */
     display: inline-block; /* Allows the text to overlay the icon */
 }
 
-.logo-icon {
+.home-logo-icon {
     display: block; /* Center the image */
     margin: 20px auto; /* Add margin for spacing above and below */
     width: 150px; /* Adjust the size of the icon */
     height: auto; /* Maintain aspect ratio */
-    opacity: 0.7; /* Make it slightly transparent */
+}
+
+.navbar {
+    position: fixed; /* Keep Navbar fixed at the top */
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000; /* Ensure it stays above other content */
 }

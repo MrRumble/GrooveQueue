@@ -8,11 +8,18 @@
     text-align: center;
 }
 
+.groovequeue-logo {
+    display: block;
+    margin: 20px auto; /* Center the logo */
+    max-width: 150px; /* Adjust the size as necessary */
+    height: auto; /* Maintain aspect ratio */
+}
 
-.signup-header {
+.signup-selection-container .signup-header {
     font-size: 2.5em; /* Adjusted size for consistency */
     color: #AC3B61; /* Specific color for header */
     margin-bottom: 20px;
+    line-height: 1.2; /* Adjust line height as needed */
 }
 
 .signup-paragraph {
