@@ -1,10 +1,10 @@
 from datetime import datetime
 
 class Request:
-    def __init__(self, request_id=None, song_name=None, guest_id=None,
+    def __init__(self, request_id=None, track_id=None, guest_id=None,
                  event_id=None, created_at=None, updated_at=None):
         self.request_id = request_id
-        self.song_name = song_name
+        self.track_id = track_id  # Changed from song_name to track_id
         self.guest_id = guest_id
         self.event_id = event_id
         self.created_at = created_at or datetime.now()
@@ -14,19 +14,19 @@ class Request:
         if not isinstance(other, Request):
             return False
         return (self.request_id == other.request_id and
-                self.song_name == other.song_name and
+                self.track_id == other.track_id and  # Updated for track_id
                 self.guest_id == other.guest_id and
                 self.event_id == other.event_id)
 
     def __repr__(self):
-        return (f"Request(request_id={self.request_id}, song_name={self.song_name}, "
+        return (f"Request(request_id={self.request_id}, track_id={self.track_id}, "
                 f"guest_id={self.guest_id}, event_id={self.event_id}, "
                 f"created_at={self.created_at}, updated_at={self.updated_at})")
 
     def to_dict(self):
         return {
             "request_id": self.request_id,
-            "song_name": self.song_name,
+            "track_id": self.track_id,  # Updated for track_id
             "guest_id": self.guest_id,
             "event_id": self.event_id,
             "created_at": self.created_at.isoformat(),
