@@ -1,10 +1,9 @@
 .navbar {
-    background-color: #333;
+    background-color: #EDC7B7;
     padding: 10px;
     display: flex;
     justify-content: center;
     align-items: center;
-    border-bottom: 2px solid #444;
 }
 
 .nav-list {
@@ -20,13 +19,17 @@
 }
 
 .nav-link {
-    color: #fff;
+    color: #ac3b61;
     text-decoration: none;
     padding: 5px 10px;
 }
 
+.nav-link:hover {
+    text-decoration: underline; /* Keeps underline on hover (optional) */
+}
+
 .logout-button {
-    background-color: #f44336;
+    background-color: #123c69;
     color: #fff;
     border: none;
     padding: 5px 10px;

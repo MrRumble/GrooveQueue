@@ -1,26 +1,31 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import Navbar from '../../components/Navbar/Navbar';
+import './Home.css';
+import GrooveQueueLogo from "../../assets/GrooveQueueLogo.png"; // Ensure the import name is correct
 
 const Home = () => {
-return (
+  return (
     <div className="home-container">
-        <Navbar />
-        <header className="header">
-            <h1>Welcome to GrooveQueue</h1>
-            <p>Your ultimate event management and guest interaction platform.</p>
-        </header>
+      <Navbar className="home-navbar" />
+      <header className="home-header">
+        <h1>
+          {Array.from('GROOVEQUEUE').map((letter, index) => (
+            <span key={index}>{letter}</span>
+          ))}
+        </h1>
+        <p>Your ultimate event management and guest interaction platform.</p>
+      </header>
 
-    <div className="content">
+      <div className="home-content">
+        <img src={GrooveQueueLogo} alt="GrooveQueue Icon" className="home-logo-icon" />
         <p>
-        Manage events, connect with your guests, and create an unforgettable experience with GrooveQueue.
+          Manage events, connect with your guests, and create an unforgettable experience with GrooveQueue.
         </p>
-        <Link to="/signupguest" className="signup-link">
-        Sign Up as Guest
-        </Link>
+        <Link to="/signup" className="home-signup-now-button">Sign Up Now</Link>
+      </div>
     </div>
-    </div>
-    );
-}
+  );
+};
 
 export default Home;

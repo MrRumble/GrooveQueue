@@ -1,0 +1,92 @@
+.home-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Centers the content horizontally */
+    justify-content: center;
+    min-height: 100vh; /* Full viewport height */
+    background: linear-gradient(to bottom, #EDC7B7, #EEE2DC); /* Gradient background */
+    padding: 0 20px; /* Horizontal padding */
+    text-align: center; /* Center text alignment */
+    position: relative; /* Allows for absolute positioning of inner elements if needed */
+    margin-top: 60px; /* Space for the fixed navbar */
+}
+
+.home-header {
+    margin-bottom: 30px; /* Space below the header */
+}
+
+.home-header h1 {
+    font-size: 2.5em;
+    color: #ac3b61;
+    margin: 0;
+    letter-spacing: 0.30em; /* Adds space between the letters */
+    transition: all 0.3s ease; /* Smooth transition for hover effect */
+    position: relative; /* Ensure the header is positioned relative to parent */
+    z-index: 1; /* Ensure it appears above the icon */
+}
+
+.home-header h1:hover span {
+    font-size: 1.3em; /* Increases font size when hovered */
+}
+
+.home-header h1 span {
+    display: inline-block;
+    transition: transform 0.3s ease, font-size 0.3s ease; /* Smooth transition for each letter */
+}
+
+.home-header h1:hover span:hover {
+    transform: scale(1.5); /* Enlarges the letter on hover */
+}
+
+.home-content p {
+    font-size: 1.2em; /* Font size for paragraphs */
+}
+
+.home-content {
+    max-width: 600px; /* Limit content width */
+}
+
+/* Styles for Navbar */
+.home-navbar {
+    position: fixed; /* Keep Navbar fixed at the top */
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000; /* Ensure it stays above other content */
+}
+
+.home-signup-now-button {
+    display: inline-block; /* Make it behave like a button */
+    margin-top: 20px; /* Space above the button */
+    padding: 10px 20px; /* Padding for the button */
+    background-color: #cd4774; /* Primary color */
+    color: #123c69; /* Text color */
+    border-radius: 5px; /* Rounded corners */
+    text-decoration: none; /* Remove underline */
+    font-size: 1.2em; /* Font size for the button */
+    transition: background-color 0.3s; /* Smooth transition for hover */
+}
+
+.home-signup-now-button:hover {
+    background-color: #e45081; /* Darker shade on hover */
+}
+
+.home-logo-container {
+    position: relative; /* Positioning for child elements */
+    display: inline-block; /* Allows the text to overlay the icon */
+}
+
+.home-logo-icon {
+    display: block; /* Center the image */
+    margin: 20px auto; /* Add margin for spacing above and below */
+    width: 150px; /* Adjust the size of the icon */
+    height: auto; /* Maintain aspect ratio */
+}
+
+.navbar {
+    position: fixed; /* Keep Navbar fixed at the top */
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000; /* Ensure it stays above other content */
+}

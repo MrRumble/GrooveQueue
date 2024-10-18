@@ -45,8 +45,7 @@ const Navbar = () => {
     return (
         <nav className="navbar">
             <ul className="nav-list">
-                <li className="nav-item"><Link className="nav-link" to="/signupguest">Sign Up Guest</Link></li>
-                <li className="nav-item"><Link className="nav-link" to="/signupband">Sign Up Band</Link></li>
+                <li className="nav-item"><Link className="nav-link" to="/signup">Sign Up</Link></li>
                 <li className="nav-item"><Link className="nav-link" to="/loginguest">Login Guest</Link></li>
                 <li className="nav-item"><Link className="nav-link" to="/loginband">Login Band</Link></li>
                 <li className="nav-item"><Link className="nav-link" to="/band-homepage">My Band</Link></li>
