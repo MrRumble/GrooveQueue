@@ -3,7 +3,6 @@ from api.requests.request_model import Request
 from api.requests.request_repository import RequestRepository
 
 def test_find_request_by_id(db_connection):
-    db_connection.seed("../seeds/tracks_table_test_data.sql")
     db_connection.seed("../seeds/requests_table_test_data.sql")
     request_repo = RequestRepository(db_connection)
     
@@ -11,32 +10,32 @@ def test_find_request_by_id(db_connection):
     result = request_repo.find(1)
     
     assert result is not None
-    assert result.track_id == '12345'  # Let It Be
+    assert result.song_name == "Let It Be"  # Updated for song_name
+    assert result.artist == "The Beatles"    # Added artist assertion
     assert result.guest_id == 1
     assert result.event_id == 1
 
 def test_find_all_requests(db_connection):
-    db_connection.seed("../seeds/tracks_table_test_data.sql")
     db_connection.seed("../seeds/requests_table_test_data.sql")
     request_repo = RequestRepository(db_connection)
     
     results = request_repo.find_all()
     
     assert len(results) == 5  # We inserted 5 requests
-    assert results[0].track_id == '12345'
-    assert results[1].track_id == '67890'
-    assert results[2].track_id == '13579'
-    assert results[3].track_id == '24680'
-    assert results[4].track_id == '11121'
+    assert results[0].song_name == "Let It Be"  # Updated for song_name
+    assert results[1].song_name == "Rolling in the Deep"  # Updated for song_name
+    assert results[2].song_name == "Shape of You"  # Updated for song_name
+    assert results[3].song_name == "Bohemian Rhapsody"  # Updated for song_name
+    assert results[4].song_name == "Blinding Lights"  # Updated for song_name
 
 def test_create_request(db_connection):
-    db_connection.seed("../seeds/tracks_table_test_data.sql")
     db_connection.seed("../seeds/requests_table_test_data.sql")
     request_repo = RequestRepository(db_connection)
     
     # Create a new Request object
     new_request = Request(
-        track_id='12345',  # This track_id must exist in tracks table
+        song_name="Shape of You",  # Updated to song_name
+        artist="Ed Sheeran",        # Added artist field
         guest_id=1,
         event_id=2
     )
@@ -46,12 +45,12 @@ def test_create_request(db_connection):
     found_request = request_repo.find(request_id)
     
     assert found_request.request_id == request_id
-    assert found_request.track_id == '12345'
+    assert found_request.song_name == "Shape of You"  # Updated for song_name
+    assert found_request.artist == "Ed Sheeran"        # Added artist assertion
     assert found_request.guest_id == 1
     assert found_request.event_id == 2
 
 def test_delete_request(db_connection):
-    db_connection.seed("../seeds/tracks_table_test_data.sql")
     db_connection.seed("../seeds/requests_table_test_data.sql")
     request_repo = RequestRepository(db_connection)
     
@@ -67,22 +66,20 @@ def test_delete_request(db_connection):
     assert deleted_request is None
 
 def test_find_requests_by_event_id(db_connection):
-    db_connection.seed("../seeds/tracks_table_test_data.sql")
     db_connection.seed("../seeds/requests_table_test_data.sql")
     request_repo = RequestRepository(db_connection)
 
     # Test finding requests for event_id 2
     results_event_2 = request_repo.find_requests_by_event_id(2)
     assert len(results_event_2) == 2  # We expect two requests for event_id 2
-    assert results_event_2[0].track_id == '13579'  # Shape of You
-    assert results_event_2[1].track_id == '24680'  # Bohemian Rhapsody
+    assert results_event_2[0].song_name == "Shape of You"  # Updated for song_name
+    assert results_event_2[1].song_name == "Bohemian Rhapsody"  # Updated for song_name
 
     # Test finding requests for a non-existent event
     results_event_non_existent = request_repo.find_requests_by_event_id(9999)
     assert results_event_non_existent is None
 
 def test_requests_by_guest(db_connection):
-    db_connection.seed("../seeds/tracks_table_test_data.sql")
     db_connection.seed("../seeds/requests_table_test_data.sql")
     request_repo = RequestRepository(db_connection)
 

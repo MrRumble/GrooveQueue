@@ -1,0 +1,74 @@
+.logged-in-container {
+    position: relative;
+    display: inline-block;
+}
+
+.logged-in-as {
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+}
+
+.avatar-circle {
+    position: relative; /* To position the badge absolutely */
+    display: inline-flex; /* To align content nicely */
+    justify-content: center; /* Center the avatar content */
+    align-items: center; /* Center the avatar content */
+    width: 40px; /* Adjust as needed */
+    height: 40px; /* Adjust as needed */
+    border-radius: 50%; /* Make it a circle */
+    background-color: #007bff; /* Change to your preferred color */
+    color: white; /* Text color */
+    font-weight: bold; /* Text weight */
+    cursor: pointer; /* Cursor pointer */
+}
+
+.notification-badge {
+    position: absolute; /* Absolute positioning to the avatar */
+    top: -5px; /* Position the badge above the avatar */
+    right: -5px; /* Position the badge to the right */
+    background-color: red; /* Badge color */
+    color: white; /* Badge text color */
+    border-radius: 50%; /* Circular badge */
+    padding: 3px 6px; /* Padding around the badge */
+    font-size: 12px; /* Font size of the badge */
+}
+
+
+.dropdown-menu {
+    position: absolute;
+    top: 50px;
+    right: 0;
+    background-color: white;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    width: 200px;
+    padding: 10px;
+    z-index: 1000;
+}
+
+.dropdown-menu p {
+    margin: 0 0 10px;
+    font-size: 14px;
+}
+
+.dropdown-menu ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+.dropdown-menu li {
+    padding: 8px 0;
+}
+
+.dropdown-menu li a {
+    text-decoration: none;
+    color: #333;
+    font-size: 14px;
+}
+
+.dropdown-menu li a:hover {
+    color: #007bff;
+}

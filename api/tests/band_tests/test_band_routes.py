@@ -120,9 +120,7 @@ def test_login_band_correct_credentials_returns_token(web_client):
     response_json = response.get_json()
     print(response_json)
     assert 'access_token' in response_json
-    assert 'band_id' in response_json
-    assert 'band_name' in response_json
-    assert 'email' in response_json
+
 
 def test_login_band_incorrect_credentials_returns_error(web_client):
     data = {

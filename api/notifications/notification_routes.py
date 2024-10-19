@@ -26,7 +26,6 @@ def get_notifications():
 
         # Fetch notifications based on user type
         notifications = notification_repo.find_unread_notifications(user_id, user_type)
-        print(notifications)
         # Convert notifications to a dictionary format for JSON response
         notifications_list = [notification.to_dict() for notification in notifications]
         print(notifications_list)
@@ -34,3 +33,17 @@ def get_notifications():
 
     except Exception as e:
         return jsonify(error=str(e)), 500
+
+@notifications_bp.route('/notifications/count', methods=['GET'])
+@jwt_required()
+def get_notification_count():
+    claims = get_jwt()
+    user_id = claims['sub']
+    user_type = claims.get('role')
+
+    connection = get_flask_database_connection(current_app)
+    notification_repo = NotificationRepository(connection)
+
+    count = notification_repo.count_unread_notifications(user_id, user_type)
+    print(count)
+    return jsonify(count=count), 200

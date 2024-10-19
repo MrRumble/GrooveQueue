@@ -25,7 +25,7 @@ class TrackRepository:
             artist=row['artist'],
             album=row['album'],
             duration=row['duration'],
-            spotify_url=row['spotify_url'],
+            musicbrainz_id=row['musicbrainz_id'],  # Added musicbrainz_id
             created_at=row['created_at'],
             updated_at=row['updated_at']
         )
@@ -34,17 +34,16 @@ class TrackRepository:
     def create(self, track):
         """Insert a new track into the database."""
         query = """
-            INSERT INTO tracks (track_id, name, artist, album, duration, spotify_url, created_at, updated_at)
-            VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
+            INSERT INTO tracks (name, artist, album, duration, musicbrainz_id, created_at, updated_at)
+            VALUES (%s, %s, %s, %s, %s, %s, %s)
             RETURNING track_id, created_at, updated_at
         """
         params = (
-            track.track_id,
             track.name,
             track.artist,
             track.album,
             track.duration,
-            track.spotify_url,
+            track.musicbrainz_id,  # Include musicbrainz_id
             track.created_at or datetime.now(),
             track.updated_at or datetime.now()
         )
@@ -59,7 +58,7 @@ class TrackRepository:
                 artist = %s,
                 album = %s,
                 duration = %s,
-                spotify_url = %s,
+                musicbrainz_id = %s, 
                 updated_at = %s
             WHERE track_id = %s
             RETURNING track_id, created_at, updated_at
@@ -69,7 +68,7 @@ class TrackRepository:
             track.artist,
             track.album,
             track.duration,
-            track.spotify_url,
+            track.musicbrainz_id,  # Include musicbrainz_id
             track.updated_at or datetime.now(),
             track_id
         )
@@ -81,3 +80,19 @@ class TrackRepository:
         query = "DELETE FROM tracks WHERE track_id = %s"
         self._connection.execute(query, [track_id])
         return None
+
+    def search_by_name(self, track_name, artist_name=None):
+        # Base query
+        query = "SELECT * FROM tracks WHERE name ILIKE %s"
+        params = [f"%{track_name}%"]  # Always include the track name filter
+
+        # If artist_name is provided, add to the query
+        if artist_name:
+            query += " AND artist ILIKE %s"
+            params.append(f"%{artist_name}%")
+
+        # Execute the query with the parameters
+        rows = self._connection.execute(query, params)
+        
+        # Return list of Track objects or an empty list
+        return [Track(**row) for row in rows] if rows else []

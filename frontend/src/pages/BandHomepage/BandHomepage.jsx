@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import {jwtDecode} from 'jwt-decode'; // Import jwt-decode
 import { Link } from 'react-router-dom'; // Import Link for navigation
 import Navbar from '../../components/Navbar/Navbar';
 
@@ -8,38 +9,27 @@ const BandHomepage = () => {
     const [error, setError] = useState(null);
 
     useEffect(() => {
-        const fetchBandDetails = async () => {
-            const token = localStorage.getItem('access_token'); // Use the correct key for your token
+        const token = localStorage.getItem('access_token'); // Use the correct key for your token
 
-            if (!token) {
-                setError("No token found. Please log in.");
-                setLoading(false);
-                return;
-            }
+        if (!token) {
+            setError("No token found. Please log in.");
+            setLoading(false);
+            return;
+        }
 
-            try {
-                const response = await fetch('http://localhost:5001/band/current', { // Ensure the endpoint matches your server
-                    method: 'GET',
-                    headers: {
-                        'Authorization': `Bearer ${token}`,
-                        'Content-Type': 'application/json',
-                    },
-                });
-
-                if (!response.ok) {
-                    throw new Error('Failed to fetch band details');
-                }
-
-                const data = await response.json();
-                setBandDetails(data);
-            } catch (err) {
-                setError(err.message);
-            } finally {
-                setLoading(false);
-            }
-        };
-        
-        fetchBandDetails();
+        try {
+            // Decode the token to get band details
+            const decodedToken = jwtDecode(token);
+            setBandDetails({
+                band_name: decodedToken.band_name,
+                band_email: decodedToken.band_email,
+                band_id: decodedToken.band_id,
+            });
+        } catch (err) {
+            setError("Invalid token. Please log in again.");
+        } finally {
+            setLoading(false);
+        }
     }, []);
 
     if (loading) return <div>Loading...</div>;

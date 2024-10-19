@@ -12,12 +12,12 @@ import CreateEvent from './components/CreateEventComponent/CreateEventComponent'
 import EventDetails from './components/EventDetailsComponent/EventsDetails';
 import CurrentBandEvents from './components/CurrentBandEventsComponent/CurrentBandEventsComponent';
 import BandEvents from './components/BandEventsComponent/BandEventsComponent';
-import CreateRequestForm from './components/CreateRequestComponent/CreateRequestComponent';
 import AllEvents from './components/AllEventsComponent/AllEvents';
 import UpdateEvent from './components/UpdateEventComponent/UpdateEventComponent';
 import EventAttendees from './components/EventAttendeesComponent/EventAtendeesComponent';
 import NotificationsPage from './pages/NotificationsPage/NotificationsPage';
 import SignupPage from './pages/SignUpPage/SignUpPage';
+import CreateRequest from './components/CreateRequestComponent/CreateRequestComponent';
 
 const App = () => {
     return (
@@ -36,10 +36,10 @@ const App = () => {
                 <Route path="/current-band-events" element={<CurrentBandEvents/>} />
                 <Route path="/bands/:bandId/events" element={<BandEvents />} />
                 <Route path="/events" element={<AllEvents />} />
-                <Route path="/events/:eventId/requests" element={<CreateRequestForm />} />
                 <Route path="/event-attendees/:eventId" element={<EventAttendees />} />
                 <Route path="/notifications" element={<NotificationsPage />} />
                 <Route path="/signup" element={<SignupPage />} />
+                <Route path="/events/:eventId/requests" element={<CreateRequest />} />
                 
             </Routes>
         </Router>
