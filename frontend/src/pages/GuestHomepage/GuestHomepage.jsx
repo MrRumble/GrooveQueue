@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import {jwtDecode} from 'jwt-decode'; // Import jwt-decode
 import Navbar from '../../components/Navbar/Navbar';
 
 const GuestHomepage = () => {
@@ -7,38 +8,27 @@ const GuestHomepage = () => {
     const [error, setError] = useState(null);
 
     useEffect(() => {
-        const fetchUserDetails = async () => {
-            const token = localStorage.getItem('access_token'); // Use the correct key for your token
+        const token = localStorage.getItem('access_token'); // Use the correct key for your token
 
-            if (!token) {
-                setError("No token found. Please log in.");
-                setLoading(false);
-                return;
-            }
+        if (!token) {
+            setError("No token found. Please log in.");
+            setLoading(false);
+            return;
+        }
 
-            try {
-                const response = await fetch('http://localhost:5001/guest/current', { // Ensure the endpoint matches your server
-                    method: 'GET',
-                    headers: {
-                        'Authorization': `Bearer ${token}`,
-                        'Content-Type': 'application/json',
-                    },
-                });
-
-                if (!response.ok) {
-                    throw new Error('Failed to fetch user details');
-                }
-
-                const data = await response.json();
-                setUserDetails(data);
-            } catch (err) {
-                setError(err.message);
-            } finally {
-                setLoading(false);
-            }
-        };
-        
-        fetchUserDetails();
+        try {
+            // Decode the token to get user details
+            const decodedToken = jwtDecode(token);
+            setUserDetails({
+                name: decodedToken.name,
+                email: decodedToken.email,
+                id: decodedToken.guest_id,
+            });
+        } catch (err) {
+            setError("Invalid token. Please log in again.");
+        } finally {
+            setLoading(false);
+        }
     }, []);
 
     if (loading) return <div>Loading...</div>;

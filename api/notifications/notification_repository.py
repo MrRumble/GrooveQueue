@@ -77,3 +77,12 @@ class NotificationRepository:
         params = (is_read, datetime.datetime.now(), notification_id)
         self._connection.execute(query, params)
         return None
+    
+    def count_unread_notifications(self, recipient_id, recipient_type):
+        """Count unread notifications for a specific recipient."""
+        query = """
+            SELECT COUNT(*) FROM notifications
+            WHERE recipient_id = %s AND recipient_type = %s AND is_read = FALSE
+        """
+        count = self._connection.execute(query, [recipient_id, recipient_type])
+        return count[0]['count'] if count else 0

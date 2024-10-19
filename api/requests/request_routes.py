@@ -46,29 +46,27 @@ def create_request(event_id):
     max_requests = event.max_requests_per_user
 
     # Check if guest has reached the max requests limit for the event
-    guests_requests_count = request_repo.requests_by_guest(data['guest_id'], event_id)
+    guests_requests_count = request_repo.requests_by_guest(guest_id=guest_id, event_id=event_id)
     if guests_requests_count >= max_requests:
         return jsonify(error="You have reached the maximum number of requests for this event."), 400
 
     # Validate input fields
-    if not data or not all(key in data for key in ['song_name', 'guest_id']):
+    if not data or not all(key in data for key in ['song_name', 'artist']):
         return jsonify(error="Missing required fields"), 400
     
-    if data['song_name'].strip() == "":
-        return jsonify(error="Song name cannot be empty"), 400
-
     # Create the new request
     new_request = Request(
-        song_name=data['song_name'],
-        guest_id=data['guest_id'],
-        event_id=event_id,  # Now we use the event_id from the URL
+        song_name=data['song_name'],  # Changed from track_id to song_name
+        artist=data['artist'],         # Added artist
+        guest_id=guest_id,
+        event_id=event_id,
         created_at=datetime.now(),
         updated_at=datetime.now()
     )
 
     new_request_id = request_repo.create(new_request)
 
-    # Send Notification to band ()
+    # Send Notification to band
     guest_repo = GuestRepository(connection)
     guest = guest_repo.find(guest_id)
     notification_repo = NotificationRepository(connection)
@@ -77,44 +75,12 @@ def create_request(event_id):
         recipient_type='band',
         event_id=event_id,
         notification_type='song_request',
-        message = f'{guest.name} has requested the song {new_request.song_name} for your show: {event.event_name}'
+        message=f'{guest.name} has requested the song "{new_request.song_name}" by {new_request.artist} for your show: {event.event_name}'
     )
 
     notification_repo.create(notification)
 
-
     return jsonify({"request_id": new_request_id}), 201
-
-
-@request_bp.route('/requests/<int:request_id>', methods=['PUT'])
-def update_request(request_id):
-    connection = get_flask_database_connection(current_app)
-    request_repo = RequestRepository(connection)
-    
-    data = request.get_json()
-    
-    # Ensure at least one field is provided
-    if not data or not any(key in data for key in ['song_name', 'guest_id', 'event_id']):
-        return jsonify(error="At least one field (song_name, guest_id, event_id) is required"), 400
-    
-    existing_request = request_repo.find(request_id)
-    if not existing_request:
-        return jsonify(error="Request not found"), 404
-
-    if 'song_name' in data:
-        if data['song_name'].strip() == "":
-            return jsonify(error="Song name cannot be empty"), 400
-        existing_request.song_name = data['song_name']
-    if 'guest_id' in data:
-        existing_request.guest_id = data['guest_id']
-    if 'event_id' in data:
-        existing_request.event_id = data['event_id']
-    
-    existing_request.updated_at = datetime.now()  # Update timestamp
-    
-    request_repo.update(request_id, existing_request)
-    
-    return jsonify({"message": "Request updated successfully"}), 200
 
 @request_bp.route('/events/<int:event_id>/requests', methods=['GET'])
 def get_requests_by_event_id(event_id):
@@ -129,4 +95,3 @@ def get_requests_by_event_id(event_id):
     requests_list = [req.to_dict() for req in requests]
     
     return jsonify(requests_list), 200
-

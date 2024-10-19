@@ -8,7 +8,7 @@ from api.events.events_routes import event_bp
 from api.requests.request_routes import request_bp
 from api.attendances.attendance_routes import attendance_bp
 from api.notifications.notification_routes import notifications_bp
-
+from api.tracks.track_routes import tracks_bp
 import os
 
 # Load environment variables python -m api.main
@@ -28,6 +28,7 @@ app.register_blueprint(event_bp)
 app.register_blueprint(request_bp)
 app.register_blueprint(attendance_bp)
 app.register_blueprint(notifications_bp)
+app.register_blueprint(tracks_bp)
 
 # Initialize CORS
 CORS(app)

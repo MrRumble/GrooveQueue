@@ -19,7 +19,8 @@ class RequestRepository:
         row = rows[0]
         request = Request(
             request_id=row['request_id'],
-            song_name=row['song_name'],
+            song_name=row['song_name'],  # Changed to song_name
+            artist=row['artist'],         # Added artist
             guest_id=row['guest_id'],
             event_id=row['event_id'],
             created_at=row['created_at'],
@@ -29,12 +30,13 @@ class RequestRepository:
 
     def create(self, request):
         query = """
-            INSERT INTO requests (song_name, guest_id, event_id, created_at, updated_at)
-            VALUES (%s, %s, %s, %s, %s)
+            INSERT INTO requests (song_name, artist, guest_id, event_id, created_at, updated_at)
+            VALUES (%s, %s, %s, %s, %s, %s)
             RETURNING request_id, created_at, updated_at
         """
         params = (
-            request.song_name,
+            request.song_name,           # Use song_name instead of track_id
+            request.artist,              # Use artist
             request.guest_id,
             request.event_id,
             request.created_at or datetime.now(),
@@ -42,26 +44,6 @@ class RequestRepository:
         )
         result = self._connection.execute(query, params)
         return result[0]['request_id']  # Return the newly created request's ID
-
-    def update(self, request_id, request):
-        query = """
-            UPDATE requests
-            SET song_name = %s,
-                guest_id = %s,
-                event_id = %s,
-                updated_at = %s
-            WHERE request_id = %s
-            RETURNING request_id, created_at, updated_at
-        """
-        params = (
-            request.song_name,
-            request.guest_id,
-            request.event_id,
-            request.updated_at or datetime.now(),
-            request_id
-        )
-        self._connection.execute(query, params)
-        return None
 
     def delete(self, request_id):
         query = "DELETE FROM requests WHERE request_id = %s"
@@ -77,7 +59,8 @@ class RequestRepository:
         for row in rows:
             request = Request(
                 request_id=row['request_id'],
-                song_name=row['song_name'],
+                song_name=row['song_name'],  # Changed to song_name
+                artist=row['artist'],         # Added artist
                 guest_id=row['guest_id'],
                 event_id=row['event_id'],
                 created_at=row['created_at'],
@@ -94,5 +77,3 @@ class RequestRepository:
         """
         result = self._connection.execute(query, [guest_id, event_id])
         return result[0]['request_count'] if result else 0
-
-

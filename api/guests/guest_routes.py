@@ -66,6 +66,7 @@ def login_guest():
 
     connection = get_flask_database_connection(current_app)
     guest_repo = GuestRepository(connection)
+    
     try:
         guest = guest_repo.find_by_email(email)
     except ValueError as e:
@@ -74,25 +75,21 @@ def login_guest():
     if not guest or not check_password_hash(guest.password, password):
         return jsonify(error="Invalid email or password"), 401
 
+    # Include guest details in the JWT token
+    additional_claims = {
+        "email": guest.email,
+        "name": guest.name,
+        "guest_id": guest.id,
+        "role": "guest"  # Include role in the token
+    }
+
     access_token = create_access_token(
         identity=guest.id, 
         expires_delta=timedelta(minutes=30),
-        additional_claims={"role": "guest"}  # Include role in the token
+        additional_claims=additional_claims  # Add the additional guest details
     )
-    return jsonify(access_token=access_token, email=guest.email, guest_id=guest.id, name=guest.name), 200
-
-@guest_bp.route('/guest/current', methods=['GET'])
-@jwt_required()
-def get_current_guest():
-    current_guest_id = get_jwt_identity()
-    connection = get_flask_database_connection(current_app)
-    guest_repo = GuestRepository(connection)
-    guest = guest_repo.find(current_guest_id)
-
-    if not guest:
-        return jsonify(error="Guest not found"), 404
-
-    return jsonify(guest.to_dict()), 200
+    
+    return jsonify(access_token=access_token), 200
 
 @guest_bp.route('/guest/logout', methods=['POST'])
 def logout_guest():
