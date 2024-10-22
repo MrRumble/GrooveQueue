@@ -51,21 +51,30 @@ def create_event():
     if not data or not all(key in data for key in ['event_name', 'location', 'event_start', 'event_end']):
         return jsonify(error="Missing required fields"), 400
 
+    # Attempt to parse event start and end times
+    try:
+        event_start = datetime.fromisoformat(data['event_start'])
+        event_end = datetime.fromisoformat(data['event_end'])
+    except ValueError:
+        return jsonify(error="Invalid date format. Use ISO 8601 format."), 400
+
+    # Create the Event instance
     event = Event(
         event_name=data.get('event_name'),
         location=data.get('location'),
-        event_start=data.get('event_start'),
-        event_end=data.get('event_end'),
+        event_start=event_start,  # Use the parsed datetime object
+        event_end=event_end,      # Use the parsed datetime object
         qr_code_content=data.get('qr_code_content'),
         band_id=get_jwt_identity(),
-        max_requests_per_user=data.get('max_requests_per_user'),
-        created_at=data.get('created_at'),
-        updated_at=data.get('updated_at')
+        max_requests_per_user=data.get('max_requests_per_user', 1),  # Default value if not provided
+        created_at=datetime.now(),  # Set created_at to now
+        updated_at=datetime.now()     # Set updated_at to now
     )
 
     # Validate the event using the boolean function
-    if not validate_event(event):
-        return jsonify(error="Invalid event data"), 400
+    is_valid, error_message = validate_event(event)
+    if not is_valid:
+        return jsonify(error=error_message), 400
 
     # If the event is valid, create it
     connection = get_flask_database_connection(current_app)
@@ -87,6 +96,13 @@ def update_event(event_id):
     if not data or not all(key in data for key in ['event_name', 'location', 'event_start', 'event_end']):
         return jsonify(error="Missing required fields"), 400
 
+        # Attempt to parse event start and end times
+    try:
+        event_start = datetime.fromisoformat(data['event_start'])
+        event_end = datetime.fromisoformat(data['event_end'])
+    except ValueError:
+        return jsonify(error="Invalid date format. Use ISO 8601 format."), 400
+    
     current_band_id = get_jwt_identity()  # Get the current band's ID from the JWT token
     connection = get_flask_database_connection(current_app)
     event_repo = EventRepository(connection)
@@ -99,20 +115,27 @@ def update_event(event_id):
     if event.band_id != current_band_id:
         return jsonify(error="You are not authorized to update this event"), 403
 
-    event = Event(
+    # Create the updated Event instance
+    updated_event = Event(
         event_name=data.get('event_name'),
         location=data.get('location'),
-        event_start=data.get('event_start'),
-        event_end=data.get('event_end'),
+        event_start=event_start,
+        event_end=event_end,
         qr_code_content=data.get('qr_code_content'),
-        band_id=data.get('band_id'),
-        max_requests_per_user=data.get('max_requests_per_user'),
+        band_id=current_band_id,  # Ensure this is set to the current band ID
+        max_requests_per_user=data.get('max_requests_per_user', event.max_requests_per_user),  # Default to existing value if not provided
         created_at=event.created_at,  # Keep existing created_at
         updated_at=datetime.now()  # Update the updated_at timestamp
     )
 
+    # Validate the updated event
+    is_valid, error_message = validate_event(updated_event)
+    if not is_valid:
+        return jsonify(error=error_message), 400
+
+    # Try to update the event in the database
     try:
-        event_repo.update(event_id, event)
+        event_repo.update(event_id, updated_event)
         return jsonify(message="Event updated successfully"), 200
     except Exception as e:
         return jsonify(error=str(e)), 400

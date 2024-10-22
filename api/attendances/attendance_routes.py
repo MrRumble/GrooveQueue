@@ -5,7 +5,7 @@ from api.events.event_repository import EventRepository
 from api.guests.guest_repository import GuestRepository
 from api.notifications.notification_repository import NotificationRepository
 from api.common.db import get_flask_database_connection
-from flask_jwt_extended import jwt_required, get_jwt_identity
+from flask_jwt_extended import jwt_required, get_jwt_identity, get_jwt
 
 # Blueprint setup
 attendance_bp = Blueprint('attendance_bp', __name__)
@@ -15,17 +15,24 @@ attendance_bp = Blueprint('attendance_bp', __name__)
 def post_attendance():
     data = request.json
     # Validate the input data
-    if not data or not all(key in data for key in ['guest_id', 'event_id', 'status']):
+    if not data or not all(key in data for key in ['event_id', 'status']):
         return jsonify(error="Missing required fields"), 400
+    
+    claims = get_jwt()
+    guest_id = claims['sub']
+    user_type = claims.get('role')
+    
+    # Check if the current user is a guest
+    if user_type != 'guest':
+        return jsonify(error="Only guests can post attendance requests."), 403
 
-    guest_id = data.get('guest_id')
     event_id = data.get('event_id')
     status = data.get('status')
 
     try:
         connection = get_flask_database_connection(current_app)
         attendance_repo = AttendanceRepository(connection)
-        
+
         # Check if attendance already exists
         if attendance_repo.check_attendance_exists(guest_id, event_id):
             return jsonify(error="Attendance request already exists for this event"), 409
@@ -37,7 +44,7 @@ def post_attendance():
         event_repo = EventRepository(connection)
         guest_repo = GuestRepository(connection)
 
-        guest = guest_repo.find(guest_id)
+        guest = guest_repo.find(guest_id)  # Fetch the guest details using the guest_id from the JWT
         event = event_repo.find(event_id)
         
         notification = Notification(
@@ -52,6 +59,7 @@ def post_attendance():
         return jsonify(attendance=created_attendance.to_dict()), 201
     except Exception as e:
         return jsonify(error=str(e)), 400
+
 
 @attendance_bp.route('/events/<int:event_id>/attendees', methods=['GET'])
 @jwt_required()

@@ -125,8 +125,8 @@ def test_create_event(db_connection, web_client, auth_headers):
     new_event = {
         "event_name": "New Event",
         "location": "New Location",
-        "event_start": "2024-12-01T10:00:00",
-        "event_end": "2024-12-01T12:00:00",
+        "event_start": "2034-12-01T10:00:00",
+        "event_end": "2034-12-01T12:00:00",
         "qr_code_content": "new_event_qr_code",
         "max_requests_per_user": 2,
         "band_id": 1
