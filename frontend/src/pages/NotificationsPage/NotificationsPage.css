@@ -1,0 +1,36 @@
+/* NotificationsPage.css */
+
+.notifications-container {
+    padding: 20px;
+    font-family: Arial, sans-serif;
+}
+
+.notifications-list {
+    list-style: none;
+    padding: 0;
+}
+
+.notification-item {
+    padding: 15px;
+    margin: 10px 0;
+    border: 1px solid #e1e1e1;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+    transition: background-color 0.3s, transform 0.2s;
+    cursor: pointer;
+}
+
+.notification-item:hover {
+    background-color: #e0f7fa; /* Change color on hover */
+    transform: scale(1.02); /* Slightly scale up on hover */
+}
+
+.notification-message {
+    margin: 0;
+    font-weight: bold;
+}
+
+.notification-status {
+    color: #888;
+    font-size: 0.9em;
+}

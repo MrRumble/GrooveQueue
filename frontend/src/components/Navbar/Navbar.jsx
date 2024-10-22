@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import LoggedInAs from '../LoggedInAsComponent/LoggedInAsComponent'; // Import the LoggedInAs component
+import GrooveQueueLogo from "../../assets/GrooveQueueLogo.png"; 
 import './Navbar.css'; // Import the CSS file
 
 const Navbar = () => {
@@ -59,6 +60,10 @@ const Navbar = () => {
 
     return (
         <nav className="navbar">
+            {/* Add the logo image to the left side of the navbar */}
+            <Link to="/" className="navbar-logo">
+                <img src={GrooveQueueLogo} alt="Logo" className="logo" />
+            </Link>
             <ul className="nav-list">
                 {/* Links that are always visible */}
                 <li className="nav-item"><Link className="nav-link" to="/signup">Sign Up</Link></li>

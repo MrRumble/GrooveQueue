@@ -112,7 +112,7 @@ def accept_attendee(event_id, attendance_id):
             recipient_id=guest_id,
             recipient_type='guest',
             event_id=event_id,
-            notification_type='attendance_response',
+            notification_type='attendance_accepted',
             message=f'Your request to attend the event {event.event_name} has been accepted!',
         )
         notification_repo.create(notification)

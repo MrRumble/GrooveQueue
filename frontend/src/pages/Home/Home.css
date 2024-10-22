@@ -10,7 +10,9 @@
     position: relative; /* Allows for absolute positioning of inner elements if needed */
     margin-top: 60px; /* Space for the fixed navbar */
 }
-
+.logo {
+    height: 50px; /* Adjust height as needed */
+}
 .home-header {
     margin-bottom: 30px; /* Space below the header */
 }
