@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom'; // Import useNavigate for navigation
 import Navbar from '../../components/Navbar/Navbar'; // Assuming you have a Navbar component
+import './CurrentBandEventsComponent.css'; // Adjust the path if necessary
 
 const CurrentBandEvents = () => {
     const [events, setEvents] = useState([]);     // State to hold events
@@ -56,21 +57,21 @@ const CurrentBandEvents = () => {
     };
 
     return (
-        <div>
+        <div className="current-band-events-container">
             <Navbar /> {/* Include the Navbar component */}
             <div className="current-band-events">
                 <h1>{bandName ? `${bandName}'s Events` : "Your Band's Events"}</h1> {/* Display the band's name */}
                 {events.length > 0 ? (
-                    <ul>
+                    <ul className="event-list">
                         {events.map(event => (
                             <li key={event.event_id} className="event-item">
-                                <h2>{event.event_name}</h2>
-                                <p><strong>Location:</strong> {event.location}</p>
-                                <p><strong>Start:</strong> {new Date(event.event_start).toLocaleString()}</p>
-                                <p><strong>End:</strong> {new Date(event.event_end).toLocaleString()}</p>
-                                <p><strong>QR Code:</strong> {event.qr_code_content}</p>
-                                <button onClick={() => handleUpdateEvent(event.event_id)}>Update Event</button> {/* Update Event Button */}
-                                <button onClick={() => handleViewAttendees(event.event_id)}>View Attendees</button> {/* View Attendees Button */}
+                                <h2 className="event-name">{event.event_name}</h2>
+                                <p className="event-location"><strong>Location:</strong> {event.location}</p>
+                                <p className="event-start"><strong>Start:</strong> {new Date(event.event_start).toLocaleString()}</p>
+                                <p className="event-end"><strong>End:</strong> {new Date(event.event_end).toLocaleString()}</p>
+                                <p className="event-qr-code"><strong>QR Code:</strong> {event.qr_code_content}</p>
+                                <button className="update-event-button" onClick={() => handleUpdateEvent(event.event_id)}>Update Event</button> {/* Update Event Button */}
+                                <button className="view-attendees-button" onClick={() => handleViewAttendees(event.event_id)}>View Attendees</button> {/* View Attendees Button */}
                             </li>
                         ))}
                     </ul>
