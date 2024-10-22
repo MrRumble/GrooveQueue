@@ -2,7 +2,7 @@ from flask import Blueprint, request, jsonify, current_app
 from api.events.event_model import Event
 from api.events.event_repository import EventRepository
 from api.bands.band_repository import BandRepository
-from api.events.event_create import create_event as create_new_event
+from api.events.validate_event import validate_event
 from api.common.db import get_flask_database_connection
 from flask_jwt_extended import jwt_required, get_jwt_identity
 from datetime import datetime
@@ -43,6 +43,7 @@ def get_event(event_id):
 
 # Route to create a new event
 @event_bp.route('/events', methods=['POST'])
+@jwt_required()
 def create_event():
     data = request.json
 
@@ -56,13 +57,22 @@ def create_event():
         event_start=data.get('event_start'),
         event_end=data.get('event_end'),
         qr_code_content=data.get('qr_code_content'),
-        band_id=data.get('band_id'),
+        band_id=get_jwt_identity(),
         max_requests_per_user=data.get('max_requests_per_user'),
         created_at=data.get('created_at'),
         updated_at=data.get('updated_at')
     )
+
+    # Validate the event using the boolean function
+    if not validate_event(event):
+        return jsonify(error="Invalid event data"), 400
+
+    # If the event is valid, create it
+    connection = get_flask_database_connection(current_app)
+    event_repo = EventRepository(connection)
+    
     try:
-        created_event_id = create_new_event(event)
+        created_event_id = event_repo.create(event)
         return jsonify(event_id=created_event_id), 201
     except Exception as e:
         return jsonify(error=str(e)), 400
