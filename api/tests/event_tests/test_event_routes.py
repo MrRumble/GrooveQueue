@@ -1,3 +1,4 @@
+
 def strip_timestamps(data):
     """Helper function to remove or normalize timestamp fields from data."""
     for entry in data:
@@ -116,18 +117,25 @@ def test_get_event_not_found(db_connection, web_client):
     response_json = response.get_json()
     assert response_json == {"error": "Event not found"}
 
-def test_create_event(db_connection, web_client):
+def test_create_event(db_connection, web_client, auth_headers):
+    # Seed the events table with test data
     db_connection.seed("../seeds/events_table_test_data.sql")
+    
+    # New event data
     new_event = {
         "event_name": "New Event",
         "location": "New Location",
-        "event_start": "2024-12-01T10:00:00",
-        "event_end": "2024-12-01T12:00:00",
+        "event_start": "2034-12-01T10:00:00",
+        "event_end": "2034-12-01T12:00:00",
         "qr_code_content": "new_event_qr_code",
         "max_requests_per_user": 2,
         "band_id": 1
     }
-    response = web_client.post('/events', json=new_event)
+    
+    # POST request to create a new event with authorization headers
+    response = web_client.post('/events', json=new_event, headers=auth_headers)
+    
+    # Assert that the response status is 201 (Created)
     assert response.status_code == 201
 
     response_json = response.get_json()
@@ -138,6 +146,7 @@ def test_create_event(db_connection, web_client):
     assert response.status_code == 200
     created_event = response.get_json()
     assert created_event['event_name'] == new_event['event_name']
+
 
 
 def test_get_events_by_band_id(db_connection, web_client):

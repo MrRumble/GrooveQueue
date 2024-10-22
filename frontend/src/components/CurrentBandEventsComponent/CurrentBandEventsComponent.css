@@ -1,0 +1,62 @@
+.current-band-events-container {
+    max-width: 800px; /* Set a maximum width for the event list */
+    margin: 0 auto;   /* Center the container */
+    padding: 20px;    /* Add padding around the content */
+    font-family: Arial, sans-serif; /* Use a clean sans-serif font */
+}
+
+.current-band-events h1 {
+    text-align: center; /* Center the title */
+    margin-bottom: 20px; /* Space below the heading */
+}
+
+.event-list {
+    list-style-type: none; /* Remove bullet points from list */
+    padding: 0; /* Remove padding */
+}
+
+.event-item {
+    border: 1px solid #BAB2B5; /* Light gray border around each event */
+    border-radius: 10px; /* Rounded corners */
+    padding: 15px; /* Padding inside each event item */
+    margin-bottom: 20px; /* Space between event items */
+    background-color: #EEE2DC; /* Very light background color */
+    transition: box-shadow 0.3s; /* Smooth transition for hover effect */
+}
+
+.event-item:hover {
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Subtle shadow on hover */
+}
+
+.event-name {
+    margin: 0; /* Remove margin from the heading */
+    font-size: 1.5rem; /* Increase font size for event name */
+    color: #222; /* Darker gray for event names */
+}
+
+.event-location,
+.event-start,
+.event-end,
+.event-qr-code {
+    margin: 5px 0; /* Add some space between paragraphs */
+    line-height: 1.5; /* Increase line height for readability */
+    color: #555; /* Medium gray for paragraph text */
+}
+
+.update-event-button,
+.view-attendees-button {
+    margin-right: 10px; /* Space between buttons */
+    padding: 8px 12px; /* Add padding inside buttons */
+    border: 1px solid #ccc; /* Light border for buttons */
+    border-radius: 4px; /* Rounded corners for buttons */
+    background-color: #e7e7e7; /* Light gray button background */
+    color: #333; /* Dark text for buttons */
+    cursor: pointer; /* Pointer cursor on hover */
+    transition: background-color 0.3s, border-color 0.3s; /* Smooth transition for hover effect */
+}
+
+.update-event-button:hover,
+.view-attendees-button:hover {
+    background-color: #d0d0d0; /* Darken button background on hover */
+    border-color: #aaa; /* Darken button border on hover */
+}

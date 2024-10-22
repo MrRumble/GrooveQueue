@@ -117,6 +117,9 @@ const LoggedInAs = () => {
                                 <li><Link to="/notifications">Notifications</Link></li>
                                 <li><Link to="/band-homepage">Profile</Link></li>
                                 <li><Link to="/settings">Settings</Link></li>
+                                {userType === 'Band' && ( // Show link only if user is a Band
+                                    <li><Link to="/current-band-events">View My Events</Link></li>
+                                )}
                                 <li onClick={handleLogout}>
                                     {loading ? 'Logging out...' : 'Logout'}
                                 </li>

@@ -8,7 +8,7 @@ from api.guests.guest_repository import GuestRepository
 from api.common.db import get_flask_database_connection
 from datetime import datetime
 from api.events.event_repository import EventRepository
-from flask_jwt_extended import jwt_required, get_jwt_identity
+from flask_jwt_extended import jwt_required, get_jwt_identity, get_jwt
 
 request_bp = Blueprint('request_bp', __name__)
 
@@ -31,14 +31,25 @@ def create_request(event_id):
     request_repo = RequestRepository(connection)
     event_repo = EventRepository(connection)
     attendance_repo = AttendanceRepository(connection)
-    guest_id = get_jwt_identity()
+    
+    claims = get_jwt()  # Get the JWT claims
+    user_role = claims.get('role')  # Extract the user role
+    guest_id = get_jwt_identity()  # Get the guest ID from the JWT
     data = request.get_json()
+
+    # Check if the user is a guest
+    if user_role != 'guest':
+        return jsonify(error="Only guests can make song requests."), 403
 
     # Check if the event exists
     event = event_repo.find(event_id)
     if not event:
         return jsonify(error="Invalid event ID: event not found"), 400
     
+    # Check if the event is in the past
+    if event.event_start < datetime.now():
+        return jsonify(error="Cannot make a request for an event that is in the past."), 403
+
     # Check if the guest is attending the event
     if not attendance_repo.is_attending_event(guest_id=guest_id, event_id=event_id):
         return jsonify(error="You must be attending the event to make a request."), 403
@@ -81,6 +92,7 @@ def create_request(event_id):
     notification_repo.create(notification)
 
     return jsonify({"request_id": new_request_id}), 201
+
 
 @request_bp.route('/events/<int:event_id>/requests', methods=['GET'])
 def get_requests_by_event_id(event_id):
