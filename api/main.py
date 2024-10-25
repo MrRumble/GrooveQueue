@@ -11,6 +11,7 @@ from api.notifications.notification_routes import notifications_bp
 from api.tracks.track_routes import tracks_bp
 import os
 
+
 # Load environment variables python -m api.main
 
 load_dotenv()

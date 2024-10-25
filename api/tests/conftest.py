@@ -4,6 +4,7 @@ from api.common.db import DatabaseConnection
 from api.main import app
 from werkzeug.security import generate_password_hash
 
+
 # This is a Pytest fixture.
 # It creates an object that we can use in our tests.
 # We will use it to create a database connection.

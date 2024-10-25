@@ -42,8 +42,6 @@ const LoginBand = () => {
             const data = await response.json();
             console.log('Login successful:', data);
             localStorage.setItem('access_token', data.access_token);
-            localStorage.setItem('band_email', data.band_email);
-            localStorage.setItem('band_id', data.band_id);
             navigate('/band-homepage'); // Navigate to the band's homepage after successful login
 
         } catch (error) {
