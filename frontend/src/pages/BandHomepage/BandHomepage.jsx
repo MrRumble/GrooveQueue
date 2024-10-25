@@ -1,36 +1,51 @@
 import React, { useEffect, useState } from 'react';
-import {jwtDecode} from 'jwt-decode'; // Import jwt-decode
-import { Link } from 'react-router-dom'; // Import Link for navigation
+import { Link, useNavigate } from 'react-router-dom'; // Import Link for navigation and useNavigate for redirection
 import Navbar from '../../components/Navbar/Navbar';
 
 const BandHomepage = () => {
     const [bandDetails, setBandDetails] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const navigate = useNavigate(); // For programmatic navigation
 
     useEffect(() => {
-        const token = localStorage.getItem('access_token'); // Use the correct key for your token
+        const fetchBandDetails = async () => {
+            const token = localStorage.getItem('access_token'); // Use the correct key for your token
 
-        if (!token) {
-            setError("No token found. Please log in.");
-            setLoading(false);
-            return;
-        }
+            if (!token) {
+                setError("No token found. Please log in.");
+                setLoading(false);
+                return;
+            }
 
-        try {
-            // Decode the token to get band details
-            const decodedToken = jwtDecode(token);
-            setBandDetails({
-                band_name: decodedToken.band_name,
-                band_email: decodedToken.band_email,
-                band_id: decodedToken.band_id,
-            });
-        } catch (err) {
-            setError("Invalid token. Please log in again.");
-        } finally {
-            setLoading(false);
-        }
-    }, []);
+            try {
+                // Fetch band details from the API
+                const response = await fetch('http://localhost:5001/band/current', {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${token}` // Attach the token for authentication
+                    }
+                });
+
+                if (!response.ok) {
+                    // If the token is invalid or blacklisted, handle the error
+                    throw new Error("Invalid or blacklisted token. Please log in again.");
+                }
+
+                const data = await response.json();
+                setBandDetails(data);
+            } catch (err) {
+                setError(err.message);
+                // Optionally clear the token if unauthorized
+                localStorage.removeItem('access_token'); // Clear the token
+                navigate('/loginband'); // Redirect to login page
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchBandDetails();
+    }, [navigate]);
 
     if (loading) return <div>Loading...</div>;
     if (error) return <div style={{ color: 'red' }}>Error: {error}</div>;

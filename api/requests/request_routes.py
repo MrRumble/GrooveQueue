@@ -9,7 +9,7 @@ from api.common.db import get_flask_database_connection
 from datetime import datetime
 from api.events.event_repository import EventRepository
 from flask_jwt_extended import jwt_required, get_jwt_identity, get_jwt
-
+from api.auth.token_fixture import token_required
 request_bp = Blueprint('request_bp', __name__)
 
 @request_bp.route('/requests/<int:request_id>', methods=['GET'])
@@ -26,6 +26,7 @@ def get_request_by_id(request_id: int):
 
 @request_bp.route('/events/<int:event_id>/requests', methods=['POST'])
 @jwt_required()
+@token_required
 def create_request(event_id):
     connection = get_flask_database_connection(current_app)
     request_repo = RequestRepository(connection)

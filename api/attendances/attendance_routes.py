@@ -6,12 +6,14 @@ from api.guests.guest_repository import GuestRepository
 from api.notifications.notification_repository import NotificationRepository
 from api.common.db import get_flask_database_connection
 from flask_jwt_extended import jwt_required, get_jwt_identity, get_jwt
+from api.auth.token_fixture import token_required
 
 # Blueprint setup
 attendance_bp = Blueprint('attendance_bp', __name__)
 
 @attendance_bp.route('/attendance', methods=['POST'])
 @jwt_required()
+@token_required
 def post_attendance():
     data = request.json
     # Validate the input data
@@ -63,6 +65,7 @@ def post_attendance():
 
 @attendance_bp.route('/events/<int:event_id>/attendees', methods=['GET'])
 @jwt_required()
+@token_required
 def get_attendees_for_event(event_id):
     current_band_id = get_jwt_identity()  # Assuming this is the band ID stored in the JWT token
     
@@ -89,6 +92,7 @@ def get_attendees_for_event(event_id):
 
 @attendance_bp.route('/events/<int:event_id>/attendees/<int:attendance_id>/accept', methods=['POST'])
 @jwt_required()
+@token_required
 def accept_attendee(event_id, attendance_id):
     current_band_id = get_jwt_identity()  # Assuming this is the band ID stored in the JWT token
     
@@ -132,6 +136,7 @@ def accept_attendee(event_id, attendance_id):
 
 @attendance_bp.route('/events/<int:event_id>/attendees/<int:attendance_id>/reject', methods=['POST'])
 @jwt_required()
+@token_required
 def reject_attendee(event_id, attendance_id):
     current_band_id = get_jwt_identity()  # Assuming this is the band ID stored in the JWT token
     
