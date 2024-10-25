@@ -8,7 +8,7 @@ from flask_jwt_extended import jwt_required, get_jwt_identity, create_access_tok
 from werkzeug.security import check_password_hash
 from datetime import timedelta
 from api.auth.token_manager import TokenManager
-from api.auth.token_utils import validate_token
+from api.auth.token_fixture import token_required
 
 # Blueprint setup
 band_bp = Blueprint('band_bp', __name__)
@@ -98,13 +98,8 @@ def login_band():
 
 @band_bp.route('/band/current', methods=['GET'])
 @jwt_required()
+@token_required
 def get_current_band():
-
-    jwt_token = request.headers.get('Authorization', '')
-    if not validate_token(jwt_token):  # If the token is invalid or blacklisted
-        return jsonify({"msg": "Invalid or blacklisted token."}), 401  # Return an appropriate response
-
-    # Proceed with normal processing
     current_band_id = get_jwt_identity()
     connection = get_flask_database_connection(current_app)
     band_repo = BandRepository(connection)
@@ -113,13 +108,10 @@ def get_current_band():
     return jsonify(band.to_dict()), 200
 
 @band_bp.route('/band/logout', methods=['POST'])
-@jwt_required()  # Ensure the user is authenticated
+@jwt_required()
 def logout_band():
 
     token_manager = TokenManager()
-
-    # Get the current token from the request headers
-    # Note: This assumes the token is sent in the Authorization header
     token = request.headers.get('Authorization', None)
 
     if token and token.startswith('Bearer '):
@@ -131,3 +123,4 @@ def logout_band():
         return jsonify(message="Band logged out successfully"), 200
     
     return jsonify(message="Token not provided or invalid"), 400
+

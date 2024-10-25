@@ -6,7 +6,7 @@ from api.events.validate_event import validate_event
 from api.common.db import get_flask_database_connection
 from flask_jwt_extended import jwt_required, get_jwt_identity
 from datetime import datetime
-
+from api.auth.token_fixture import token_required
 # Blueprint setup
 event_bp = Blueprint('event_bp', __name__)
 
@@ -44,6 +44,7 @@ def get_event(event_id):
 # Route to create a new event
 @event_bp.route('/events', methods=['POST'])
 @jwt_required()
+@token_required
 def create_event():
     data = request.json
 

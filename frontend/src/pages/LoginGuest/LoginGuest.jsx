@@ -18,8 +18,6 @@ const LoginGuest = () => {
         if (existingUserType === 'band') {
             // Clear existing session data for band
             localStorage.removeItem('access_token');
-            localStorage.removeItem('band_email');
-            localStorage.removeItem('band_id');
         }
 
         // Set the user type to guest
@@ -42,8 +40,6 @@ const LoginGuest = () => {
             const data = await response.json();
             console.log('Login successful:', data);
             localStorage.setItem('access_token', data.access_token);
-            localStorage.setItem('email', data.email);
-            localStorage.setItem('user_id', data.user_id);
             navigate('/guest-homepage');
 
         } catch (error) {

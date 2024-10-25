@@ -6,6 +6,9 @@ from api.common.db import get_flask_database_connection
 from werkzeug.security import check_password_hash
 from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity
 from datetime import timedelta
+from api.auth.token_fixture import token_required
+from api.auth.token_manager import TokenManager
+
 
 # Blueprint setup
 guest_bp = Blueprint('guest_bp', __name__)
@@ -93,4 +96,29 @@ def login_guest():
 
 @guest_bp.route('/guest/logout', methods=['POST'])
 def logout_guest():
-    return jsonify(message="Guest logged out successfully"), 200
+    
+    token_manager = TokenManager()
+    token = request.headers.get('Authorization', None)
+
+    if token and token.startswith('Bearer '):
+        token = token.split(' ')[1]  # Extract the token part
+
+        # Blacklist the token
+        token_manager.blacklist_token(token)
+
+        return jsonify(message="Guest logged out successfully"), 200
+    
+    return jsonify(message="Token not provided or invalid"), 400
+
+@guest_bp.route('/guest/current', methods=['GET'])
+@jwt_required()
+@token_required
+def get_current_guest():
+    current_guest_id = get_jwt_identity()
+    connection = get_flask_database_connection(current_app)
+    guest_repo = GuestRepository(connection)
+    guest = guest_repo.find(current_guest_id)
+    if not guest:
+        return jsonify({"error": "Guest not found"}), 404
+
+    return jsonify(guest.to_dict()), 200
