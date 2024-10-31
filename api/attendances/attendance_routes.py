@@ -110,7 +110,7 @@ def accept_attendee(event_id, attendance_id):
         
         # Check if the current band is associated with the event
         if event.band_id != current_band_id:
-            return jsonify(error="Unauthorized to accept attendees for this event"), 403
+            return jsonify(error="Unauthorised to accept attendees for this event"), 403
 
         # Update the attendance status to "attending"
         updated_attendance = attendance_repo.update_attendance_status(attendance_id, "attending")
@@ -125,7 +125,7 @@ def accept_attendee(event_id, attendance_id):
             recipient_type='guest',
             event_id=event_id,
             notification_type='attendance_accepted',
-            message=f'Your request to attend the event {event.event_name} has been accepted!',
+            message=f'Your request to attend the event {event.event_name} has been accepted! Click here to send a song request now.',
         )
         notification_repo.create(notification)
 
