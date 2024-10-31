@@ -12,7 +12,7 @@ def test_find_band_by_id(db_connection):
     # Find the band with id 1
     result = band_repo.find(1)
     
-    # Create the expected Band object
+    # Create the expected Band object, including the new field
     expected_band = Band(
         band_id=1,
         band_name='White Noise',
@@ -20,8 +20,9 @@ def test_find_band_by_id(db_connection):
         password='bandpass123',
         oauth_provider='spotify',
         oauth_provider_id='spotify123',
-        created_at=None,  # We will handle timestamp comparison separately
-        updated_at=None   # We will handle timestamp comparison separately
+        profile_picture_path='path/to/profile1.jpg',  # Adjusted to include new field
+        created_at=None,  # Handle timestamp comparison separately
+        updated_at=None   # Handle timestamp comparison separately
     )
     
     # Check if the result is not None
@@ -34,6 +35,7 @@ def test_find_band_by_id(db_connection):
     assert result.password == expected_band.password
     assert result.oauth_provider == expected_band.oauth_provider
     assert result.oauth_provider_id == expected_band.oauth_provider_id
+    assert result.profile_picture_path == expected_band.profile_picture_path  # New field comparison
 
     # Optionally, compare timestamps with some tolerance if needed
     assert abs((result.created_at - expected_band.created_at).total_seconds()) < 1
@@ -52,6 +54,7 @@ def test_find_all_bands(db_connection):
             password='bandpass123',
             oauth_provider='spotify',
             oauth_provider_id='spotify123',
+            profile_picture_path='path/to/profile1.jpg',  # Adjusted to include new field
             created_at=None,  # Timestamps to be checked separately
             updated_at=None   # Timestamps to be checked separately
         ),
@@ -62,6 +65,7 @@ def test_find_all_bands(db_connection):
             password='rockpass456',
             oauth_provider='apple',
             oauth_provider_id='apple456',
+            profile_picture_path='path/to/profile2.jpg',  # Adjusted to include new field
             created_at=None,
             updated_at=None
         ),
@@ -72,6 +76,7 @@ def test_find_all_bands(db_connection):
             password='jazzpass789',
             oauth_provider=None,
             oauth_provider_id=None,
+            profile_picture_path=None,  # Adjusted to include new field
             created_at=None,
             updated_at=None
         ),
@@ -82,10 +87,10 @@ def test_find_all_bands(db_connection):
             password='bandpass123',
             oauth_provider=None,
             oauth_provider_id=None,
+            profile_picture_path='path/to/profile4.jpg',  # Adjusted to include new field
             created_at=None,
             updated_at=None
         )
-        # Add more Band objects as needed
     ]
     
     # Check if the number of results is as expected
@@ -99,6 +104,7 @@ def test_find_all_bands(db_connection):
         assert result.password == expected_band.password
         assert result.oauth_provider == expected_band.oauth_provider
         assert result.oauth_provider_id == expected_band.oauth_provider_id
+        assert result.profile_picture_path == expected_band.profile_picture_path  # New field comparison
         
         # Optionally, compare timestamps with some tolerance
         if expected_band.created_at:
@@ -115,13 +121,14 @@ def test_create_band(db_connection):
     # Create an instance of BandRepository
     band_repo = BandRepository(db_connection)
     
-    # Create a new Band object
+    # Create a new Band object, including the new field
     new_band = Band(
         band_name='New Band',
         band_email='new.band@example.com',
         password='newbandpass',
         oauth_provider='twitter',
-        oauth_provider_id='tw202'
+        oauth_provider_id='tw202',
+        profile_picture_path=None  # Include new field
     )
     
     # Insert the new band into the database
@@ -133,7 +140,8 @@ def test_create_band(db_connection):
     assert found_band.password == "newbandpass"
     assert found_band.oauth_provider == 'twitter'
     assert found_band.oauth_provider_id == "tw202"
-    
+    assert found_band.profile_picture_path is None  # Assert new field is None
+
 def test_update_band(db_connection):
     # Seed the database with test data
     db_connection.seed("../seeds/bands_table_test_data.sql")
@@ -144,12 +152,13 @@ def test_update_band(db_connection):
     # Find an existing band to update
     band_to_update = band_repo.find(1)
     
-    # Modify the band's details
+    # Modify the band's details, including the new field
     band_to_update.band_name = "Updated Band Name"
     band_to_update.band_email = "updated.band@example.com"
     band_to_update.password = "updatedbandpass"
     band_to_update.oauth_provider = "github"
     band_to_update.oauth_provider_id = "gh12345"
+    band_to_update.profile_picture_path = "path/to/profile/pic.jpg"  # Set new field
     
     # Perform the update operation
     band_repo.update(band_to_update.band_id, band_to_update)
@@ -157,13 +166,14 @@ def test_update_band(db_connection):
     # Fetch the updated band from the database
     updated_band = band_repo.find(band_to_update.band_id)
     
-    # Assert the updated fields
+    # Assert the updated fields, including the new field
     assert updated_band.band_name == "Updated Band Name"
     assert updated_band.band_email == "updated.band@example.com"
     assert updated_band.password == "updatedbandpass"
     assert updated_band.oauth_provider == "github"
     assert updated_band.oauth_provider_id == "gh12345"
-    
+    assert updated_band.profile_picture_path == "path/to/profile/pic.jpg"  # Assert new field
+
     # Check that the IDs match
     assert updated_band.band_id == band_to_update.band_id
 

@@ -12,17 +12,17 @@ def test_get_all_bands(db_connection, web_client):
 
     response_json = response.get_json()
 
-    # Define expected data with placeholders for timestamps
     expected_data = [
-                {
+        {
             "band_id": 1,
             "band_name": "White Noise",
             "band_email": "white.noise@example.com",
             "password": "bandpass123",
             "oauth_provider": "spotify",
             "oauth_provider_id": "spotify123",
-            "created_at": "PLACEHOLDER",
-            "updated_at": "PLACEHOLDER"
+            "profile_picture_path": "path/to/profile1.jpg",  # Added field
+            "created_at": "PLACEHOLDER",  # You can replace with actual datetime if needed
+            "updated_at": "PLACEHOLDER"   # You can replace with actual datetime if needed
         },
         {
             "band_id": 2,
@@ -31,8 +31,9 @@ def test_get_all_bands(db_connection, web_client):
             "password": "rockpass456",
             "oauth_provider": "apple",
             "oauth_provider_id": "apple456",
-            "created_at": "PLACEHOLDER",
-            "updated_at": "PLACEHOLDER"
+            "profile_picture_path": "path/to/profile2.jpg",  # Added field
+            "created_at": "PLACEHOLDER",  # You can replace with actual datetime if needed
+            "updated_at": "PLACEHOLDER"   # You can replace with actual datetime if needed
         },
         {
             "band_id": 3,
@@ -41,8 +42,9 @@ def test_get_all_bands(db_connection, web_client):
             "password": "jazzpass789",
             "oauth_provider": None,
             "oauth_provider_id": None,
-            "created_at": "PLACEHOLDER",
-            "updated_at": "PLACEHOLDER"
+            "profile_picture_path": None,  # Added field, no profile picture
+            "created_at": "PLACEHOLDER",  # You can replace with actual datetime if needed
+            "updated_at": "PLACEHOLDER"   # You can replace with actual datetime if needed
         },
         {
             "band_id": 4,
@@ -51,11 +53,12 @@ def test_get_all_bands(db_connection, web_client):
             "password": "bandpass123",
             "oauth_provider": None,
             "oauth_provider_id": None,
-            "created_at": "PLACEHOLDER",
-            "updated_at": "PLACEHOLDER"
+            "profile_picture_path": "path/to/profile4.jpg",  # Added field
+            "created_at": "PLACEHOLDER",  # You can replace with actual datetime if needed
+            "updated_at": "PLACEHOLDER"   # You can replace with actual datetime if needed
         }
-
     ]
+
 
     # Strip timestamps from actual data for comparison
     stripped_actual = strip_timestamps(response_json.copy())

@@ -23,6 +23,7 @@ class BandRepository:
             password=row['password'],
             oauth_provider=row.get('oauth_provider'),
             oauth_provider_id=row.get('oauth_provider_id'),
+            profile_picture_path=row.get('profile_picture_path'),  # New field
             created_at=row['created_at'],
             updated_at=row['updated_at']
         )
@@ -30,8 +31,9 @@ class BandRepository:
 
     def create(self, band):
         query = """
-            INSERT INTO bands (band_name, band_email, password, oauth_provider, oauth_provider_id, created_at, updated_at)
-            VALUES (%s, %s, %s, %s, %s, %s, %s)
+            INSERT INTO bands (band_name, band_email, password, oauth_provider, oauth_provider_id, 
+                               profile_picture_path, created_at, updated_at)
+            VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
             RETURNING band_id, created_at, updated_at
         """
         params = (
@@ -40,6 +42,7 @@ class BandRepository:
             band.password,
             band.oauth_provider,
             band.oauth_provider_id,
+            band.profile_picture_path,  # New field
             band.created_at or datetime.datetime.now(),
             band.updated_at or datetime.datetime.now()
         )
@@ -55,6 +58,7 @@ class BandRepository:
                 password = %s,
                 oauth_provider = %s,
                 oauth_provider_id = %s,
+                profile_picture_path = %s,
                 updated_at = %s
             WHERE band_id = %s
             RETURNING band_id, created_at, updated_at
@@ -65,6 +69,7 @@ class BandRepository:
             band.password,
             band.oauth_provider,
             band.oauth_provider_id,
+            band.profile_picture_path, 
             band.updated_at or datetime.datetime.now(),
             band_id
         )
@@ -97,6 +102,7 @@ class BandRepository:
             password=row['password'],
             oauth_provider=row.get('oauth_provider'),
             oauth_provider_id=row.get('oauth_provider_id'),
+            profile_picture_path=row.get('profile_picture_path'),  # New field
             created_at=row['created_at'],
             updated_at=row['updated_at']
         )
