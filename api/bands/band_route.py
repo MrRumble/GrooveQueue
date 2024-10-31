@@ -111,7 +111,8 @@ def login_band():
         "role": "band",
         "band_email": band.band_email,
         "band_id": band.band_id,
-        "band_name": band.band_name
+        "band_name": band.band_name,
+        "profile_picture_path": f"http://localhost:5001/static/uploads/profile_pictures/{os.path.basename(band.profile_picture_path)}"
     }
 
     access_token = create_access_token(
@@ -128,15 +129,21 @@ def login_band():
 @jwt_required()
 @token_required
 def get_current_band():
+    # Get current band information from the token
     current_band_id = get_jwt_identity()
-    connection = get_flask_database_connection(current_app)
-    band_repo = BandRepository(connection)
-    band = band_repo.find(current_band_id)
+    current_band_claims = get_jwt()
 
-    return jsonify(band.to_dict()), 200
+    # Prepare band details dictionary to return
+    band_dict = {
+        "band_id": current_band_id,
+        "band_name": current_band_claims.get("band_name"),
+        "band_email": current_band_claims.get("band_email"),
+        "profile_picture_path": current_band_claims.get("profile_picture_path")
+    }
+
+    return jsonify(band_dict), 200
 
 @band_bp.route('/band/logout', methods=['POST'])
-@jwt_required()
 def logout_band():
 
     token_manager = TokenManager()

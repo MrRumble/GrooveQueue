@@ -6,6 +6,7 @@ import './LoggedInAs.css'; // Add your custom styles here
 const LoggedInAs = () => {
     const [userType, setUserType] = useState(null);
     const [userName, setUserName] = useState(null);
+    const [profilePicturePath, setProfilePicturePath] = useState(null); // State for profile picture
     const [showDropdown, setShowDropdown] = useState(false);
     const [loading, setLoading] = useState(false); // Loading state
     const [errorMessage, setErrorMessage] = useState(null); // Error message
@@ -18,14 +19,15 @@ const LoggedInAs = () => {
         if (token) {
             try {
                 const decodedToken = jwtDecode(token);
-                const { role } = decodedToken;
+                const { role, band_name, profile_picture_path } = decodedToken;
 
                 if (role === 'guest') {
                     setUserName(decodedToken.name);
                     setUserType('Guest');
                 } else if (role === 'band') {
-                    setUserName(decodedToken.band_name);
+                    setUserName(band_name);
                     setUserType('Band');
+                    setProfilePicturePath(profile_picture_path); // Set the profile picture path
                 }
             } catch (error) {
                 console.error('Invalid token:', error);
@@ -102,7 +104,15 @@ const LoggedInAs = () => {
             {userName && userType ? (
                 <div className="logged-in-as">
                     <div className="avatar-circle" onClick={handleDropdownToggle}>
-                        {userName.charAt(0).toUpperCase()}
+                        {profilePicturePath ? (
+                            <img 
+                                src={profilePicturePath} 
+                                alt="Profile" 
+                                className="avatar-image" 
+                            />
+                        ) : (
+                            userName.charAt(0).toUpperCase() // Fallback to first letter if no image
+                        )}
                         {/* Display notification count as a badge */}
                         {notificationCount > 0 && (
                             <span className="notification-badge">{notificationCount}</span>

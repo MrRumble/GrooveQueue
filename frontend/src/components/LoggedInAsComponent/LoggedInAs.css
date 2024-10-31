@@ -1,40 +1,55 @@
+/* Main container for logged in user */
 .logged-in-container {
     position: relative;
-    display: inline-block;
+    display: inline-block; /* Keeps the element inline */
 }
 
+/* Container for logged in user info */
 .logged-in-as {
     cursor: pointer;
     display: flex;
-    align-items: center;
+    align-items: center; /* Aligns items in the center */
 }
 
+/* Avatar Circle */
 .avatar-circle {
-    position: relative; /* To position the badge absolutely */
-    display: inline-flex; /* To align content nicely */
-    justify-content: center; /* Center the avatar content */
-    align-items: center; /* Center the avatar content */
-    width: 40px; /* Adjust as needed */
-    height: 40px; /* Adjust as needed */
-    border-radius: 50%; /* Make it a circle */
-    background-color: #007bff; /* Change to your preferred color */
-    color: white; /* Text color */
-    font-weight: bold; /* Text weight */
-    cursor: pointer; /* Cursor pointer */
+    width: 50px; /* Adjust based on design */
+    height: 50px; /* Adjust based on design */
+    border-radius: 50%; /* Make it circular */
+    overflow: visible; /* Ensure the image is contained within the circle */
+    position: relative; /* For positioning the badge */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #007bff; /* Background color for empty avatars */
 }
 
+/* Avatar Image */
+.avatar-image {
+    width: 100%; /* Full width of the circle */
+    height: 100%; /* Full height of the circle */
+    object-fit: cover; /* Maintain aspect ratio */
+}
+
+/* Notification Badge */
 .notification-badge {
-    position: absolute; /* Absolute positioning to the avatar */
-    top: -5px; /* Position the badge above the avatar */
-    right: -5px; /* Position the badge to the right */
+    position: absolute; /* Position it relative to the avatar */
+    top: -5px; /* Position above the avatar */
+    right: -5px; /* Position to the right of the avatar */
     background-color: red; /* Badge color */
     color: white; /* Badge text color */
     border-radius: 50%; /* Circular badge */
     padding: 3px 6px; /* Padding around the badge */
     font-size: 12px; /* Font size of the badge */
+    min-width: 20px; /* Ensure minimum width for visibility */
+    height: 20px; /* Fixed height to keep it circular */
+    display: flex; /* Center the text */
+    align-items: center; /* Vertically center text */
+    justify-content: center; /* Horizontally center text */
+    z-index: 1; /* Ensure it appears above the avatar */
 }
 
-
+/* Dropdown menu styles */
 .dropdown-menu {
     position: absolute;
     top: 50px;
@@ -48,6 +63,7 @@
     z-index: 1000;
 }
 
+/* Dropdown menu text styles */
 .dropdown-menu p {
     margin: 0 0 10px;
     font-size: 14px;

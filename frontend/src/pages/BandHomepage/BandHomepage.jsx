@@ -1,16 +1,17 @@
 import React, { useEffect, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom'; // Import Link for navigation and useNavigate for redirection
+import { Link, useNavigate } from 'react-router-dom';
 import Navbar from '../../components/Navbar/Navbar';
+import './BandHomepage.css'; 
 
 const BandHomepage = () => {
     const [bandDetails, setBandDetails] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-    const navigate = useNavigate(); // For programmatic navigation
+    const navigate = useNavigate();
 
     useEffect(() => {
         const fetchBandDetails = async () => {
-            const token = localStorage.getItem('access_token'); // Use the correct key for your token
+            const token = localStorage.getItem('access_token');
 
             if (!token) {
                 setError("No token found. Please log in.");
@@ -19,16 +20,14 @@ const BandHomepage = () => {
             }
 
             try {
-                // Fetch band details from the API
                 const response = await fetch('http://localhost:5001/band/current', {
                     method: 'GET',
                     headers: {
-                        'Authorization': `Bearer ${token}` // Attach the token for authentication
+                        'Authorization': `Bearer ${token}`
                     }
                 });
 
                 if (!response.ok) {
-                    // If the token is invalid or blacklisted, handle the error
                     throw new Error("Invalid or blacklisted token. Please log in again.");
                 }
 
@@ -36,9 +35,8 @@ const BandHomepage = () => {
                 setBandDetails(data);
             } catch (err) {
                 setError(err.message);
-                // Optionally clear the token if unauthorized
-                localStorage.removeItem('access_token'); // Clear the token
-                navigate('/loginband'); // Redirect to login page
+                localStorage.removeItem('access_token');
+                navigate('/loginband');
             } finally {
                 setLoading(false);
             }
@@ -51,24 +49,29 @@ const BandHomepage = () => {
     if (error) return <div style={{ color: 'red' }}>Error: {error}</div>;
 
     return (
-        <div>
+        <div className="band-homepage-container"> {/* Use the specific class */}
             <Navbar />
-            <h1>Welcome to the Band Homepage!</h1>
+            <h1 className="band-homepage-title">Welcome to the Band Homepage!</h1>
             {bandDetails ? (
                 <div>
-                    <h2>Band Details:</h2>
+                    <h2 className="band-homepage-details">Band Details:</h2>
+                    {bandDetails.profile_picture_path && (
+                        <img 
+                            className="band-homepage-image"  // Use the specific class
+                            src={bandDetails.profile_picture_path} 
+                            alt={`${bandDetails.band_name} Profile`} 
+                        />
+                    )}
                     <p><strong>Band Name:</strong> {bandDetails.band_name}</p>
                     <p><strong>Band Email:</strong> {bandDetails.band_email}</p>
-                    <p><strong>Band ID:</strong> {bandDetails.band_id}</p>
+                    
 
-                    {/* Link to the Create New Event page */}
                     <Link to="/create-event">
-                        <button>Create New Event</button>
+                        <button className="band-homepage-button">Create New Event</button> {/* Use the specific class */}
                     </Link>
 
-                    {/* Link to the Current Band Events page */}
                     <Link to="/current-band-events" style={{ marginLeft: '10px' }}>
-                        <button>View {bandDetails.band_name}'s Events</button>
+                        <button className="band-homepage-button">View {bandDetails.band_name}'s Events</button> {/* Use the specific class */}
                     </Link>
                 </div>
             ) : (
