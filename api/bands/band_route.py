@@ -9,9 +9,13 @@ from werkzeug.security import check_password_hash
 from datetime import timedelta
 from api.auth.token_manager import TokenManager
 from api.auth.token_fixture import token_required
+from werkzeug.utils import secure_filename
+import os
 
 # Blueprint setup
 band_bp = Blueprint('band_bp', __name__)
+
+MAX_FILE_SIZE = 10 * 1024 * 1024
 
 # Route to get all bands
 @band_bp.route('/bands', methods=['GET'])
@@ -25,15 +29,16 @@ def get_all_bands():
 
     return jsonify(bands_dict), 200
 
-# Route to create a new band
 @band_bp.route('/bands', methods=['POST'])
 def create_band():
-    data = request.json
+    # Handle form data and files
+    data = request.form
+    file = request.files.get('profile_picture')
 
     # Validate the input data
     if not data or not all(key in data for key in ['band_name', 'band_email', 'password']):
         return jsonify(error="Missing required fields"), 400
-    
+
     # Validate OAuth2 fields if they are provided
     oauth_provider = data.get('oauth_provider')
     oauth_provider_id = data.get('oauth_provider_id')
@@ -44,12 +49,35 @@ def create_band():
     if oauth_provider_id and not isinstance(oauth_provider_id, str):
         return jsonify(error="Invalid OAuth provider ID format"), 400
 
+    # Handle image upload
+    profile_picture_path = None
+    if file:
+        # Check file size
+        if len(file.read()) > MAX_FILE_SIZE:
+            return jsonify(error="File size exceeds 2 MB limit."), 400
+        file.seek(0)  # Reset file pointer after reading
+
+        # Validate file type
+        if not file.filename.lower().endswith(('.png', '.jpg', '.jpeg', '.gif')):
+            return jsonify(error="Invalid image format. Only PNG, JPG, and GIF are allowed."), 400
+        
+        # Save the file
+        filename = secure_filename(file.filename)
+        upload_folder = 'api/static/uploads/profile_pictures'  # Adjust your path accordingly
+        os.makedirs(upload_folder, exist_ok=True)
+        file.save(os.path.join(upload_folder, filename))
+        
+        # Save the path to the profile picture
+        profile_picture_path = os.path.join(upload_folder, filename)
+
+    # Create a new Band object
     band = Band(
         band_name=data.get('band_name'),
         band_email=data.get('band_email'),
         password=data.get('password'),
         oauth_provider=oauth_provider,
-        oauth_provider_id=oauth_provider_id
+        oauth_provider_id=oauth_provider_id,
+        profile_picture_path=profile_picture_path  # Include profile picture path
     )
 
     try:
