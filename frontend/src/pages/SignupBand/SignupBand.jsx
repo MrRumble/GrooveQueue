@@ -5,27 +5,27 @@ const SignUpBand = () => {
     const [bandName, setBandName] = useState('');
     const [bandEmail, setBandEmail] = useState('');
     const [password, setPassword] = useState('');
-    const [error, setError] = useState(''); // State to manage error messages
-    const [message, setMessage] = useState(''); // State to manage success messages
-
-    const navigate = useNavigate(); // Step 2: Use useNavigate to get navigate function
+    const [profilePicture, setProfilePicture] = useState(null); // State for profile picture
+    const [error, setError] = useState('');
+    const [message, setMessage] = useState('');
+    
+    const navigate = useNavigate();
 
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        const bandData = {
-            band_name: bandName,
-            band_email: bandEmail,
-            password,
-        };
+        const formData = new FormData(); // Create a FormData object
+        formData.append('band_name', bandName);
+        formData.append('band_email', bandEmail);
+        formData.append('password', password);
+        if (profilePicture) {
+            formData.append('profile_picture', profilePicture); // Append the file
+        }
 
         try {
-            const response = await fetch('http://localhost:5001/bands', { // Ensure the endpoint matches your server
+            const response = await fetch('http://localhost:5001/bands', {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(bandData),
+                body: formData, // Send the FormData object
             });
 
             const data = await response.json();
@@ -35,19 +35,18 @@ const SignUpBand = () => {
             }
 
             setMessage(data.message);
-            setError(''); // Clear any previous error
+            setError('');
 
-            // Optionally reset the form fields
             setBandName('');
             setBandEmail('');
             setPassword('');
+            setProfilePicture(null); // Clear the profile picture input
 
-            // Step 3: Navigate to the band homepage after successful sign up
             navigate('/loginband');
 
         } catch (err) {
             setError(err.message);
-            setMessage(''); // Clear any previous message
+            setMessage('');
         }
     };
 
@@ -80,6 +79,14 @@ const SignUpBand = () => {
                         value={password} 
                         onChange={(e) => setPassword(e.target.value)} 
                         required 
+                    />
+                </div>
+                <div>
+                    <label>Profile Picture:</label>
+                    <input 
+                        type="file" 
+                        accept="image/*" 
+                        onChange={(e) => setProfilePicture(e.target.files[0])} // Get the file
                     />
                 </div>
                 <button type="submit">Sign Up</button>

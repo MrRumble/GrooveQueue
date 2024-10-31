@@ -14,7 +14,8 @@
     height: 50px; /* Adjust height as needed */
 }
 .home-header {
-    margin-bottom: 30px; /* Space below the header */
+    margin-bottom: 30px; 
+    font-size: 1.8em;/* Space below the header */
 }
 
 .home-header h1 {
@@ -37,7 +38,7 @@
 }
 
 .home-header h1:hover span:hover {
-    transform: scale(1.5); /* Enlarges the letter on hover */
+    transform: scale(1.2); /* Enlarges the letter on hover */
 }
 
 .home-content p {
@@ -92,3 +93,21 @@
     right: 0;
     z-index: 1000; /* Ensure it stays above other content */
 }
+
+.letter {
+    transition: transform 0.3s ease, font-size 0.3s ease;
+    display: inline-block;
+}
+
+/* Unique styles for each letter in GROOVEQUEUE */
+.letter-0 { color: #fc795b } /* G */
+.letter-1 { color: #ffaf03 } /* R */
+.letter-2 { color: #FF33F6 } /* O */
+.letter-3 { color: #33FFBD } /* O */
+.letter-4 { color: #38fa0d } /* V */
+.letter-5 { color: #3b75ac } /* E */
+.letter-6 { color: #ac3b61 } /* Q */
+.letter-7 { color: #ac3b61 } /* U */
+.letter-8 { color: #ac3b61 } /* E */
+.letter-9 { color: #ac3b61 } /* U */
+.letter-10 { color: #ac3b61} /* E */

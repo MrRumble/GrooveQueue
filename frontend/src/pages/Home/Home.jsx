@@ -9,13 +9,16 @@ const Home = () => {
     <div className="home-container">
       <Navbar className="home-navbar" />
       <header className="home-header">
-        <h1>
-          {Array.from('GROOVEQUEUE').map((letter, index) => (
-            <span key={index}>{letter}</span>
-          ))}
-        </h1>
-        <p>Your ultimate event management and guest interaction platform.</p>
-      </header>
+      <h1>
+        {Array.from("GROOVEQUEUE").map((letter, index) => (
+          <span key={index} className={`letter letter-${index}`}>
+            {letter}
+          </span>
+        ))}
+      </h1>
+      <p>Your ultimate event management and guest interaction platform.</p>
+    </header>
+
 
       <div className="home-content">
         <img src={GrooveQueueLogo} alt="GrooveQueue Icon" className="home-logo-icon" />

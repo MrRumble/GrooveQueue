@@ -1,0 +1,42 @@
+/* BandHomepage.css */
+
+.band-homepage-container {
+    display: flex;                /* Use flexbox for centering */
+    flex-direction: column;       /* Align items in a column */
+    align-items: center;          /* Center items horizontally */
+    justify-content: center;      /* Center items vertically */
+    height: 100vh;               /* Full viewport height */
+    text-align: center;           /* Center text */
+   /* Light background color for contrast */
+}
+
+.band-homepage-title {
+    margin-bottom: 20px;         /* Space below the main title */
+}
+
+.band-homepage-details {
+    margin: 15px 0;              /* Space around the band details */
+}
+
+.band-homepage-button {
+    padding: 10px 20px;          /* Padding for buttons */
+    margin: 5px;                 /* Space between buttons */
+    border: none;                /* No border for buttons */
+    border-radius: 5px;         /* Rounded corners */
+    background-color: #ac3b61;   /* Bootstrap primary color */
+    color: white;                /* White text color */
+    cursor: pointer;             /* Pointer cursor on hover */
+    transition: background-color 0.3s; /* Smooth transition for hover effect */
+}
+
+.band-homepage-button:hover {
+    background-color: #003976;   /* Darker blue on hover */
+}
+
+.band-homepage-image {
+    margin: 20px 0;              /* Space around the image */
+    border: 2px solid #003976;   /* Border around the image */
+    width: 300px;                 /* Fixed width */
+    height: 300px;                /* Fixed height */
+    border-radius: 10%;           /* Circular image */
+}
