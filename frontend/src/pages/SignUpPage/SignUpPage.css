@@ -6,69 +6,79 @@
     padding: 20px;
     min-height: 100vh;
     text-align: center;
-}
-
-.groovequeue-logo {
-    display: block;
-    margin: 20px auto; /* Center the logo */
-    max-width: 150px; /* Adjust the size as necessary */
-    height: auto; /* Maintain aspect ratio */
-}
-
-.signup-selection-container .signup-header {
-    font-size: 2.5em; /* Adjusted size for consistency */
-    color: #AC3B61; /* Specific color for header */
+  }
+  
+  .signup-header {
+    font-size: 2.5em;
+    color: #AC3B61;
     margin-bottom: 20px;
-    line-height: 1.2; /* Adjust line height as needed */
-}
+  }
+  
 
-.signup-paragraph {
-    font-size: 1.2em; /* Font size for paragraphs */
-
-    margin-bottom: 40px;
-}
-
-.info-boxes {
+  .info-boxes {
     display: flex;
     justify-content: space-around;
     width: 100%;
-    max-width: 1000px; /* Adjusted for better layout */
-    flex-wrap: wrap; /* Allows wrapping on smaller screens */
-    gap: 20px; /* Space between boxes */
-}
-
-.info-box {
-    background-color: #EEE2DC;
-    border-radius: 10px;
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-    padding: 20px;
-    width: 45%;
-    text-align: center;
-}
-
-.info-box-header {
-    font-size: 1.8em; /* Font size for info box header */
-    color: #AC3B61; /* Specific color for box headers */
-    margin-bottom: 15px;
-}
-
-.info-box-paragraph {
-    list-style-type: none;
-    font-size: 1.1em; /* Font size for box paragraphs */
-    margin-bottom: 20px;
-    text-align: left;
-}
-
-.signup-button {
-    background-color: #123c69;
+    max-width: 900px; /* Reduced max-width for a more compact layout */
+    gap: 20px;
+    flex-wrap: wrap;
+  }
+  
+  .info-box {
+    position: relative;
+    width: 40%;
+    height: 600px;
+    background-size: cover;
+    background-position: center;
+    border-radius: 15px;
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    transition: transform 0.3s ease-in-out;
+  }
+  
+  /* Always show beige overlay */
+  .overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(255, 210, 195, 0.675); /* Beige hue with 80% opacity */
     color: #EEE2DC;
-    padding: 10px 20px;
-    border-radius: 5px;
-    text-decoration: none;
-    font-size: 1.1em;
-    transition: background-color 0.3s;
-}
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+    align-items: center;
+    padding: 20px;
+    transition: background-color 0.3s ease-in-out;
+  }
+  
+  .info-box:hover .overlay {
+    background-color: rgba(255, 229, 200, 0.905); /* Darker beige hue on hover */
+  }
 
-.signup-button:hover {
-    background-color: #1962af;
-}
+  .info-box:hover {
+    transform: scale(1.05); /* Slightly scale up the tile */
+  }
+  
+  .info-box-header {
+    font-size: 4em;
+    font-style: italic;
+    margin-bottom: 15px;
+    align-self: flex-start;
+    color: #123c69;
+  }
+  
+  .info-box-paragraph {
+    font-size: 1.1em;
+    color: #123c69;
+    margin-bottom: 20px;
+    margin-right: 10px;
+    text-align: left;
+    padding: 0;
+    line-height: 1.5;
+  }
+  
+
+
+  
